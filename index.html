@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tiny Astartes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #1a2744;
+    --navy-dark: #111c38;
+    --navy-light: #2d3f6e;
+    --slate: #475569;
+    --slate-light: #64748b;
+    --blue-accent: #3b5bdb;
+    --blue-hover: #2f4ac4;
+    --bg: #f8f9fb;
+    --surface: #ffffff;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --p1-color: #3b5bdb;
+    --p1-light: #eff2ff;
+    --p2-color: #e03131;
+    --p2-light: #fff5f5;
+    --radius-sm: 8px;
+    --radius-md: 10px;
+    --radius-lg: 12px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+    --shadow-lg: 0 10px 30px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.06);
+  }
+
+  html, body {
+    height: 100%;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #app {
+    min-height: 100vh;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* SCREEN TRANSITIONS */
+  .screen {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    min-height: 100vh;
+    opacity: 0;
+    transform: translateX(30px);
+    transition: opacity 0.28s ease, transform 0.28s ease;
+    pointer-events: none;
+    display: none;
+  }
+  .screen.active {
+    display: block;
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: all;
+    position: relative;
+  }
+  .screen.exit-left {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  /* TYPOGRAPHY */
+  .text-xs { font-size: 11px; line-height: 1.4; }
+  .text-sm { font-size: 13px; line-height: 1.5; }
+  .text-base { font-size: 15px; line-height: 1.6; }
+  .text-lg { font-size: 17px; line-height: 1.5; }
+  .text-xl { font-size: 20px; line-height: 1.4; }
+  .text-2xl { font-size: 24px; line-height: 1.3; }
+  .text-3xl { font-size: 30px; line-height: 1.2; }
+  .font-medium { font-weight: 500; }
+  .font-semibold { font-weight: 600; }
+  .font-bold { font-weight: 700; }
+  .font-extrabold { font-weight: 800; }
+  .text-muted { color: var(--text-muted); }
+  .text-secondary { color: var(--text-secondary); }
+
+  /* BUTTONS */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 20px;
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s ease;
+    text-decoration: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary {
+    background: var(--blue-accent);
+    color: white;
+    box-shadow: 0 2px 8px rgba(59,91,219,0.3);
+  }
+  .btn-primary:hover { background: var(--blue-hover); }
+  .btn-navy {
+    background: var(--navy);
+    color: white;
+    box-shadow: 0 2px 8px rgba(26,39,68,0.3);
+  }
+  .btn-navy:hover { background: var(--navy-dark); }
+  .btn-outline {
+    background: white;
+    color: var(--text-primary);
+    border: 1.5px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+  .btn-outline:hover { border-color: #c0c9d8; background: #fafbfc; }
+  .btn-block { width: 100%; }
+  .btn-sm {
+    padding: 8px 14px;
+    font-size: 13px;
+    border-radius: var(--radius-sm);
+  }
+  .btn-lg {
+    padding: 15px 24px;
+    font-size: 16px;
+    border-radius: var(--radius-lg);
+  }
+  .btn-icon {
+    width: 36px; height: 36px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: 700;
+    background: var(--border-light);
+    color: var(--text-primary);
+    border: 1.5px solid var(--border);
+    flex-shrink: 0;
+  }
+  .btn-icon:hover { background: var(--border); }
+  .btn-icon.btn-icon-primary {
+    background: var(--blue-accent);
+    color: white;
+    border-color: var(--blue-accent);
+  }
+  .btn-icon.btn-icon-danger {
+    background: #fef2f2;
+    color: var(--danger);
+    border-color: #fecaca;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+  .card-padded { padding: 16px; }
+
+  /* BADGE */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .badge-blue { background: var(--p1-light); color: var(--p1-color); }
+  .badge-red { background: var(--p2-light); color: var(--p2-color); }
+  .badge-navy { background: #eef0f8; color: var(--navy); }
+  .badge-green { background: #ecfdf5; color: var(--success); }
+  .badge-amber { background: #fffbeb; color: var(--warning); }
+
+  /* ===================== SCREEN 1 — RULES ===================== */
+  #screen-rules {
+    padding-bottom: 40px;
+  }
+
+  .rules-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    padding: 32px 20px 28px;
+    text-align: center;
+    position: relative;
+  }
+  .rules-header .app-logo {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+  .rules-header h1 {
+    font-size: 26px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -0.5px;
+  }
+  .rules-header p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  .rules-content {
+    padding: 20px 16px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    padding: 0 2px;
+  }
+
+  /* Core numbers */
+  .core-numbers {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .core-number-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 14px 10px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .core-number-card .num {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--navy);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .core-number-card .label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    line-height: 1.3;
+  }
+
+  /* Collapsible phase cards */
+  .phase-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+  .phase-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    transition: box-shadow 0.15s;
+  }
+  .phase-card.open {
+    box-shadow: var(--shadow-md);
+  }
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .phase-icon {
+    width: 36px; height: 36px;
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .phase-icon.move { background: #eff2ff; }
+  .phase-icon.shoot { background: #fff7ed; }
+  .phase-icon.charge { background: #fdf4ff; }
+  .phase-icon.fight { background: #fef2f2; }
+  .phase-title {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .phase-subtitle {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-top: 1px;
+  }
+  .phase-chevron {
+    color: var(--text-muted);
+    font-size: 12px;
+    transition: transform 0.2s ease;
+  }
+  .phase-card.open .phase-chevron { transform: rotate(180deg); }
+  .phase-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.28s ease;
+  }
+  .phase-body-inner {
+    padding: 0 16px 16px;
+    border-top: 1px solid var(--border-light);
+  }
+  .phase-body-inner p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+  .phase-body-inner p + p {
+    margin-top: 6px;
+  }
+
+  /* Roll sequence */
+  .roll-sequence {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .roll-step {
+    background: var(--navy);
+    color: white;
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .roll-arrow {
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .rules-cta {
+    padding: 0 16px 20px;
+  }
+
+  /* ===================== SCREEN 2 — GAME MODES ===================== */
+  #screen-modes {
+    padding-bottom: 40px;
+  }
+
+  .modes-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 16px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .back-btn {
+    width: 34px; height: 34px;
+    border-radius: var(--radius-sm);
+    background: var(--border-light);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.12s;
+  }
+  .back-btn:hover { background: var(--border); }
+  .modes-header-text h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .modes-header-text p {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 1px;
+  }
+
+  .modes-content {
+    padding: 20px 16px;
+  }
+
+  .mode-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .mode-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 16px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mode-card:hover, .mode-card:active {
+    border-color: var(--blue-accent);
+    box-shadow: 0 0 0 4px rgba(59,91,219,0.08), var(--shadow-md);
+    transform: translateY(-1px);
+  }
+  .mode-emoji {
+    font-size: 30px;
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--border-light);
+    border-radius: var(--radius-md);
+  }
+  .mode-info {
+    flex: 1;
+  }
+  .mode-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+  }
+  .mode-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+  .mode-arrow {
+    color: var(--text-muted);
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  /* ===================== SCREEN 3 — BATTLE ===================== */
+  #screen-battle {
+    padding-bottom: 40px;
+  }
+
+  /* Battle Header */
+  .battle-header {
+    background: var(--navy);
+    padding: 14px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .battle-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .battle-header-back {
+    width: 30px; height: 30px;
+    border-radius: var(--radius-sm);
+    background: rgba(255,255,255,0.12);
+    border: none;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    color: rgba(255,255,255,0.8);
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.12s;
+  }
+  .battle-header-back:hover { background: rgba(255,255,255,0.2); }
+  .battle-header-center {
+    flex: 1;
+    text-align: center;
+  }
+  .battle-mode-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 0.02em;
+  }
+  .battle-turn {
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 1px;
+    font-weight: 500;
+  }
+  .battle-next-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: white;
+    padding: 7px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.12s;
+  }
+  .battle-next-btn:hover { background: rgba(255,255,255,0.25); }
+
+  .battle-content {
+    padding: 16px;
+  }
+
+  /* Player panels */
+  .player-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .player-panel {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--border);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .player-panel.p1 { border-color: var(--p1-color); }
+  .player-panel.p2 { border-color: var(--p2-color); }
+  .player-panel-header {
+    padding: 10px 12px 8px;
+  }
+  .player-panel.p1 .player-panel-header { background: var(--p1-light); }
+  .player-panel.p2 .player-panel-header { background: var(--p2-light); }
+  .player-name-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .player-name-display {
+    font-size: 13px;
+    font-weight: 700;
+    flex: 1;
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 1px 3px;
+    margin: -1px -3px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .player-panel.p1 .player-name-display { color: var(--p1-color); }
+  .player-panel.p2 .player-name-display { color: var(--p2-color); }
+  .player-name-input {
+    font-size: 13px;
+    font-weight: 700;
+    font-family: inherit;
+    width: 100%;
+    border: 1.5px solid;
+    border-radius: 4px;
+    padding: 2px 6px;
+    background: white;
+    display: none;
+    outline: none;
+  }
+  .player-panel.p1 .player-name-input { border-color: var(--p1-color); color: var(--p1-color); }
+  .player-panel.p2 .player-name-input { border-color: var(--p2-color); color: var(--p2-color); }
+  .edit-icon {
+    font-size: 11px;
+    opacity: 0.4;
+    cursor: pointer;
+  }
+
+  .player-score-area {
+    padding: 10px 12px 12px;
+    text-align: center;
+  }
+  .score-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .score-value {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .player-panel.p1 .score-value { color: var(--p1-color); }
+  .player-panel.p2 .score-value { color: var(--p2-color); }
+
+  .kill-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  /* Objectives section */
+  .objectives-section {
+    margin-bottom: 16px;
+  }
+  .objectives-section h3 {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+  .objective-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .objective-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    box-shadow: var(--shadow-sm);
+  }
+  .objective-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .objective-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .obj-pts-badge {
+    font-size: 10px;
+    font-weight: 700;
+    background: #fffbeb;
+    color: var(--warning);
+    border: 1px solid #fde68a;
+    border-radius: 20px;
+    padding: 2px 7px;
+  }
+  .objective-toggle {
+    display: flex;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    width: 100%;
+  }
+  .toggle-btn {
+    flex: 1;
+    padding: 7px 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    background: var(--border-light);
+    color: var(--text-muted);
+    transition: all 0.12s;
+    -webkit-tap-highlight-color: transparent;
+    font-family: inherit;
+  }
+  .toggle-btn:not(:last-child) { border-right: 1px solid var(--border); }
+  .toggle-btn.active-p1 { background: var(--p1-color); color: white; }
+  .toggle-btn.active-p2 { background: var(--p2-color); color: white; }
+  .toggle-btn.active-contested { background: var(--slate); color: white; }
+  .toggle-btn.active-attacker { background: var(--p1-color); color: white; }
+  .toggle-btn.active-defender { background: var(--p2-color); color: white; }
+
+  /* Siege roles */
+  .siege-roles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .siege-role-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    box-shadow: var(--shadow-sm);
+  }
+  .siege-role-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+  }
+  .siege-role-name {
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .siege-role-card.attacker .siege-role-name { color: var(--p1-color); }
+  .siege-role-card.defender .siege-role-name { color: var(--p2-color); }
+
+  /* Turn history / score track */
+  .turn-track {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-sm);
+  }
+  .turn-track h3 {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+  .turn-track-dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .turn-dot {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+    transition: background 0.2s;
+  }
+  .turn-dot.done { background: var(--success); }
+  .turn-dot.current { background: var(--blue-accent); }
+
+  /* ===================== RESULT SCREEN ===================== */
+  #screen-result {
+    padding-bottom: 40px;
+  }
+  .result-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    padding: 32px 20px 28px;
+    text-align: center;
+  }
+  .result-trophy { font-size: 52px; margin-bottom: 12px; }
+  .result-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 4px;
+  }
+  .result-subtitle {
+    font-size: 14px;
+    color: rgba(255,255,255,0.65);
+  }
+  .result-content {
+    padding: 20px 16px;
+  }
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 16px;
+  }
+  .result-card-header {
+    background: var(--border-light);
+    padding: 10px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .result-score-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .result-score-row:last-child { border-bottom: none; }
+  .result-player-name {
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .result-player-score {
+    font-size: 20px;
+    font-weight: 800;
+  }
+  .result-p1 .result-player-name, .result-p1 .result-player-score { color: var(--p1-color); }
+  .result-p2 .result-player-name, .result-p2 .result-player-score { color: var(--p2-color); }
+  .result-winner-row {
+    background: linear-gradient(135deg, #fffbeb, #fef3c7);
+    border-top: 1px solid #fde68a;
+    padding: 12px 16px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #92400e;
+  }
+  .result-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* ===================== TABLET / RESPONSIVE ===================== */
+  @media (min-width: 600px) {
+    .rules-content {
+      padding: 24px 24px;
+    }
+    .rules-cta { padding: 0 24px 24px; }
+    .modes-content { padding: 24px; }
+    .battle-content { padding: 20px 24px; }
+    .result-content { padding: 24px; }
+  }
+
+  @media (min-width: 768px) {
+    .rules-header { padding: 40px 32px 36px; }
+    .rules-header h1 { font-size: 32px; }
+    .rules-content { padding: 28px 32px; }
+    .rules-cta { padding: 0 32px 28px; }
+
+    .core-numbers { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .core-number-card { padding: 18px 14px; }
+    .core-number-card .num { font-size: 26px; }
+
+    .phase-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .phase-card.open {
+      grid-column: span 2;
+    }
+
+    .modes-content { padding: 28px 32px; }
+    .mode-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .mode-card { flex-direction: column; text-align: center; padding: 24px 16px; }
+    .mode-emoji { width: 56px; height: 56px; font-size: 28px; margin: 0 auto; }
+    .mode-arrow { display: none; }
+
+    .battle-content { padding: 20px 32px; }
+
+    .objective-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+    .result-content { padding: 28px 32px; }
+    .result-actions { flex-direction: row; }
+    .result-actions .btn { flex: 1; }
+  }
+
+  /* Tiebreak modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,23,42,0.6);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .modal-overlay.show { opacity: 1; }
+  .modal-box {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(8px);
+    transition: transform 0.2s;
+  }
+  .modal-overlay.show .modal-box { transform: translateY(0); }
+  .modal-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .modal-body {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+  .modal-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .modal-input-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+  }
+  .modal-input-group input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .modal-input-group input:focus { border-color: var(--blue-accent); }
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .modal-actions .btn { flex: 1; }
+
+  /* Utility */
+  .hidden { display: none !important; }
+  .mt-2 { margin-top: 8px; }
+  .mt-3 { margin-top: 12px; }
+  .mt-4 { margin-top: 16px; }
+  .mb-2 { margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ==================== SCREEN 1: RULES ==================== -->
+  <div id="screen-rules" class="screen active">
+    <div class="rules-header">
+      <div class="app-logo">⚔️</div>
+      <h1>Tiny Astartes</h1>
+      <p>Warhammer 40K for beginners</p>
+    </div>
+
+    <div class="rules-content">
+      <p class="section-label">Core Numbers</p>
+      <div class="core-numbers">
+        <div class="core-number-card">
+          <div class="num">6"</div>
+          <div class="label">Move Distance</div>
+        </div>
+        <div class="core-number-card">
+          <div class="num">8"</div>
+          <div class="label">Shoot Range</div>
+        </div>
+        <div class="core-number-card">
+          <div class="num">4+</div>
+          <div class="label">All Rolls</div>
+        </div>
+      </div>
+
+      <p class="section-label">The Four Phases</p>
+      <div class="phase-list" id="phase-list">
+
+        <div class="phase-card" id="phase-move">
+          <div class="phase-header" onclick="togglePhase('move')">
+            <div class="phase-icon move">🦶</div>
+            <div>
+              <div class="phase-title">Movement</div>
+              <div class="phase-subtitle">Move up to 6 inches</div>
+            </div>
+            <span class="phase-chevron">▼</span>
+          </div>
+          <div class="phase-body" id="phase-body-move">
+            <div class="phase-body-inner">
+              <p>Each of your models can move up to <strong>6 inches</strong> in any direction.</p>
+              <p>You can move each model independently. Models cannot move through other models or off the table.</p>
+              <p>Tip: Move your models towards enemies or objectives, but think about where they'll be when shooting starts!</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase-card" id="phase-shoot">
+          <div class="phase-header" onclick="togglePhase('shoot')">
+            <div class="phase-icon shoot">🎯</div>
+            <div>
+              <div class="phase-title">Shooting</div>
+              <div class="phase-subtitle">Attack at range, up to 8"</div>
+            </div>
+            <span class="phase-chevron">▼</span>
+          </div>
+          <div class="phase-body" id="phase-body-shoot">
+            <div class="phase-body-inner">
+              <p>Pick a model and a target enemy within <strong>8 inches</strong>. Roll three dice:</p>
+              <div class="roll-sequence">
+                <div class="roll-step">Hit 4+</div>
+                <div class="roll-arrow">→</div>
+                <div class="roll-step">Wound 4+</div>
+                <div class="roll-arrow">→</div>
+                <div class="roll-step">Save 4+</div>
+              </div>
+              <p class="mt-3"><strong>Hit:</strong> Roll a die — score 4 or more to hit.</p>
+              <p><strong>Wound:</strong> If you hit, roll again — score 4 or more to wound.</p>
+              <p><strong>Save:</strong> The defender rolls — 4 or more means the armour holds and nothing happens. Below 4? Remove that model!</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase-card" id="phase-charge">
+          <div class="phase-header" onclick="togglePhase('charge')">
+            <div class="phase-icon charge">💨</div>
+            <div>
+              <div class="phase-title">Charge</div>
+              <div class="phase-subtitle">Rush into close combat</div>
+            </div>
+            <span class="phase-chevron">▼</span>
+          </div>
+          <div class="phase-body" id="phase-body-charge">
+            <div class="phase-body-inner">
+              <p>Choose a model to charge at an enemy within <strong>12 inches</strong>. Roll 2 dice and add them together — if the total reaches the enemy, the charge succeeds and you move right next to them!</p>
+              <p>If the total isn't enough, the charge fails and the model stays put.</p>
+              <p>Tip: Charging is exciting but risky — only charge if you really want to get stuck in!</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase-card" id="phase-fight">
+          <div class="phase-header" onclick="togglePhase('fight')">
+            <div class="phase-icon fight">👊</div>
+            <div>
+              <div class="phase-title">Fight</div>
+              <div class="phase-subtitle">Swing at close range</div>
+            </div>
+            <span class="phase-chevron">▼</span>
+          </div>
+          <div class="phase-body" id="phase-body-fight">
+            <div class="phase-body-inner">
+              <p>Models next to an enemy can fight! The same three rolls apply:</p>
+              <div class="roll-sequence">
+                <div class="roll-step">Hit 4+</div>
+                <div class="roll-arrow">→</div>
+                <div class="roll-step">Wound 4+</div>
+                <div class="roll-arrow">→</div>
+                <div class="roll-step">Save 4+</div>
+              </div>
+              <p class="mt-3">Both players fight — the attacker goes first, then the defender strikes back! Even if a model is killed, it still gets to fight before it's removed.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="rules-cta">
+      <button class="btn btn-navy btn-block btn-lg" onclick="showScreen('modes')">
+        Choose Game Mode →
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== SCREEN 2: MODES ==================== -->
+  <div id="screen-modes" class="screen">
+    <div class="modes-header">
+      <div class="back-btn" onclick="showScreen('rules')">←</div>
+      <div class="modes-header-text">
+        <h2>Choose a Game Mode</h2>
+        <p>Pick how you want to play</p>
+      </div>
+    </div>
+
+    <div class="modes-content">
+      <div class="mode-cards">
+        <div class="mode-card" onclick="startBattle('los')">
+          <div class="mode-emoji">💀</div>
+          <div class="mode-info">
+            <div class="mode-name">Last One Standing</div>
+            <div class="mode-desc">Kill the most models in 5 turns</div>
+          </div>
+          <div class="mode-arrow">›</div>
+        </div>
+        <div class="mode-card" onclick="startBattle('htl')">
+          <div class="mode-emoji">🚩</div>
+          <div class="mode-info">
+            <div class="mode-name">Hold the Line</div>
+            <div class="mode-desc">Control objectives, score points each turn</div>
+          </div>
+          <div class="mode-arrow">›</div>
+        </div>
+        <div class="mode-card" onclick="startBattle('siege')">
+          <div class="mode-emoji">🏰</div>
+          <div class="mode-info">
+            <div class="mode-name">Siege</div>
+            <div class="mode-desc">Attacker vs Defender, capture 3 objectives</div>
+          </div>
+          <div class="mode-arrow">›</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SCREEN 3: BATTLE ==================== -->
+  <div id="screen-battle" class="screen">
+    <div class="battle-header">
+      <div class="battle-header-top">
+        <button class="battle-header-back" onclick="showScreen('modes')">←</button>
+        <div class="battle-header-center">
+          <div class="battle-mode-name" id="battle-mode-label">—</div>
+          <div class="battle-turn" id="battle-turn-label">Turn 1 of 5</div>
+        </div>
+        <button class="battle-next-btn" id="battle-next-btn" onclick="nextTurn()">Next Turn →</button>
+      </div>
+    </div>
+
+    <div class="battle-content" id="battle-content">
+      <!-- Dynamically rendered by JS -->
+    </div>
+  </div>
+
+  <!-- ==================== SCREEN 4: RESULT ==================== -->
+  <div id="screen-result" class="screen">
+    <div class="result-header">
+      <div class="result-trophy" id="result-trophy">🏆</div>
+      <div class="result-title" id="result-title">Game Over!</div>
+      <div class="result-subtitle" id="result-subtitle">Here's how it went</div>
+    </div>
+    <div class="result-content">
+      <div class="result-card">
+        <div class="result-card-header">Final Scores</div>
+        <div id="result-scores"></div>
+        <div class="result-winner-row" id="result-winner-row"></div>
+      </div>
+      <div class="result-actions">
+        <button class="btn btn-navy btn-lg" onclick="playAgain()">↺ Play Again</button>
+        <button class="btn btn-outline btn-lg" onclick="showScreen('modes')">Change Mode</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Tiebreak Modal -->
+<div class="modal-overlay" id="tiebreak-modal">
+  <div class="modal-box">
+    <div class="modal-title">⚖️ It's a Tie!</div>
+    <div class="modal-body">Both players have the same number of kills. Count how many models each player has left — the player with more models remaining wins!</div>
+    <div class="modal-inputs">
+      <div class="modal-input-group">
+        <label id="tiebreak-p1-label">Player 1 — Models Remaining</label>
+        <input type="number" id="tiebreak-p1-input" min="0" value="0" inputmode="numeric">
+      </div>
+      <div class="modal-input-group">
+        <label id="tiebreak-p2-label">Player 2 — Models Remaining</label>
+        <input type="number" id="tiebreak-p2-input" min="0" value="0" inputmode="numeric">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-navy btn-block" onclick="resolveTiebreak()">Decide Winner</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================
+// STATE
+// ============================
+const state = {
+  mode: null,          // 'los' | 'htl' | 'siege'
+  turn: 1,
+  maxTurns: 5,
+  players: [
+    { name: 'Player 1', kills: 0, score: 0 },
+    { name: 'Player 2', kills: 0, score: 0 }
+  ],
+  objectives: [
+    { name: 'Objective 1', pts: 1, holder: 'contested' },
+    { name: 'Centre', pts: 2, holder: 'contested' },
+    { name: 'Objective 3', pts: 1, holder: 'contested' }
+  ],
+  siegeObjectives: [
+    { name: 'Objective 1', holder: 'contested' },
+    { name: 'Objective 2', holder: 'contested' },
+    { name: 'Objective 3', holder: 'contested' }
+  ]
+};
+
+const MODE_META = {
+  los:  { label: 'Last One Standing', emoji: '💀' },
+  htl:  { label: 'Hold the Line',     emoji: '🚩' },
+  siege:{ label: 'Siege',             emoji: '🏰' }
+};
+
+// ============================
+// SCREEN NAVIGATION
+// ============================
+let currentScreen = 'rules';
+
+function showScreen(id) {
+  const screens = document.querySelectorAll('.screen');
+  screens.forEach(s => {
+    if (s.id === 'screen-' + currentScreen) {
+      s.classList.add('exit-left');
+      setTimeout(() => {
+        s.classList.remove('active', 'exit-left');
+        s.style.display = 'none';
+      }, 280);
+    }
+  });
+  const next = document.getElementById('screen-' + id);
+  if (next) {
+    setTimeout(() => {
+      next.style.display = 'block';
+      requestAnimationFrame(() => {
+        next.classList.add('active');
+      });
+    }, 60);
+  }
+  currentScreen = id;
+}
+
+// ============================
+// PHASE CARDS
+// ============================
+function togglePhase(id) {
+  const card = document.getElementById('phase-' + id);
+  const body = document.getElementById('phase-body-' + id);
+  const isOpen = card.classList.contains('open');
+
+  // Close all
+  document.querySelectorAll('.phase-card').forEach(c => {
+    c.classList.remove('open');
+  });
+  document.querySelectorAll('.phase-body').forEach(b => {
+    b.style.maxHeight = '0';
+  });
+
+  if (!isOpen) {
+    card.classList.add('open');
+    body.style.maxHeight = body.scrollHeight + 'px';
+  }
+}
+
+// ============================
+// BATTLE INIT
+// ============================
+function startBattle(mode) {
+  state.mode = mode;
+  state.turn = 1;
+  state.players[0].kills = 0;
+  state.players[0].score = 0;
+  state.players[1].kills = 0;
+  state.players[1].score = 0;
+  state.objectives.forEach(o => o.holder = 'contested');
+  state.siegeObjectives.forEach(o => o.holder = 'contested');
+
+  document.getElementById('battle-mode-label').textContent = MODE_META[mode].label;
+  updateTurnLabel();
+  renderBattle();
+  showScreen('battle');
+}
+
+function updateTurnLabel() {
+  document.getElementById('battle-turn-label').textContent =
+    `Turn ${state.turn} of ${state.maxTurns}`;
+  const btn = document.getElementById('battle-next-btn');
+  btn.textContent = state.turn >= state.maxTurns ? 'End Game →' : `Next Turn →`;
+}
+
+// ============================
+// RENDER BATTLE
+// ============================
+function renderBattle() {
+  const el = document.getElementById('battle-content');
+  if (state.mode === 'los') el.innerHTML = renderLOS();
+  else if (state.mode === 'htl') el.innerHTML = renderHTL();
+  else if (state.mode === 'siege') el.innerHTML = renderSiege();
+
+  renderTurnTrack();
+  attachNameEditing();
+}
+
+function renderTurnTrack() {
+  // Inject turn track before player panels if not already
+  let track = document.getElementById('turn-track');
+  if (!track) return;
+  let html = '';
+  for (let i = 1; i <= state.maxTurns; i++) {
+    let cls = i < state.turn ? 'done' : i === state.turn ? 'current' : '';
+    html += `<div class="turn-dot ${cls}"></div>`;
+  }
+  track.querySelector('.turn-track-dots').innerHTML = html;
+}
+
+function renderLOS() {
+  const p0 = state.players[0];
+  const p1 = state.players[1];
+  return `
+    <div class="turn-track" id="turn-track">
+      <h3>Turn Progress</h3>
+      <div class="turn-track-dots"></div>
+    </div>
+    <div class="player-panels">
+      ${renderPlayerPanel(0, 'kills', '⚔️ Kills')}
+      ${renderPlayerPanel(1, 'kills', '⚔️ Kills')}
+    </div>
+    <div style="text-align:center; color:var(--text-muted); font-size:13px; margin-top:4px; padding:0 4px;">
+      Count enemy models removed from the table
+    </div>
+  `;
+}
+
+function renderHTL() {
+  const p0 = state.players[0];
+  const p1 = state.players[1];
+  let objHtml = '';
+  state.objectives.forEach((obj, i) => {
+    objHtml += `
+      <div class="objective-card">
+        <div class="objective-top">
+          <div class="objective-name">
+            ${obj.name}
+            ${obj.pts === 2 ? '<span class="obj-pts-badge">2 pts</span>' : '<span class="obj-pts-badge">1 pt</span>'}
+          </div>
+        </div>
+        <div class="objective-toggle">
+          <button class="toggle-btn ${obj.holder === 'p1' ? 'active-p1' : ''}" onclick="setObjHolder('htl', ${i}, 'p1')" id="htl-toggle-${i}-p1">${p0.name}</button>
+          <button class="toggle-btn ${obj.holder === 'contested' ? 'active-contested' : ''}" onclick="setObjHolder('htl', ${i}, 'contested')" id="htl-toggle-${i}-contested">Contested</button>
+          <button class="toggle-btn ${obj.holder === 'p2' ? 'active-p2' : ''}" onclick="setObjHolder('htl', ${i}, 'p2')" id="htl-toggle-${i}-p2">${p1.name}</button>
+        </div>
+      </div>`;
+  });
+  return `
+    <div class="turn-track" id="turn-track">
+      <h3>Turn Progress</h3>
+      <div class="turn-track-dots"></div>
+    </div>
+    <div class="player-panels">
+      ${renderPlayerPanel(0, 'score', '🚩 Points')}
+      ${renderPlayerPanel(1, 'score', '🚩 Points')}
+    </div>
+    <div class="objectives-section mt-4">
+      <h3>Objectives</h3>
+      <div class="objective-list">${objHtml}</div>
+    </div>
+    <div style="text-align:center; color:var(--text-muted); font-size:12px; margin-top:10px;">
+      Points are scored at the <strong>end of each turn</strong> — tap Next Turn to add them.
+    </div>
+  `;
+}
+
+function renderSiege() {
+  const p0 = state.players[0];
+  const p1 = state.players[1];
+  let objHtml = '';
+  state.siegeObjectives.forEach((obj, i) => {
+    objHtml += `
+      <div class="objective-card">
+        <div class="objective-top">
+          <div class="objective-name">${obj.name}</div>
+        </div>
+        <div class="objective-toggle">
+          <button class="toggle-btn ${obj.holder === 'attacker' ? 'active-attacker' : ''}" onclick="setObjHolder('siege', ${i}, 'attacker')">⚔️ Attacker</button>
+          <button class="toggle-btn ${obj.holder === 'contested' ? 'active-contested' : ''}" onclick="setObjHolder('siege', ${i}, 'contested')">Contested</button>
+          <button class="toggle-btn ${obj.holder === 'defender' ? 'active-defender' : ''}" onclick="setObjHolder('siege', ${i}, 'defender')">🛡️ Defender</button>
+        </div>
+      </div>`;
+  });
+  return `
+    <div class="turn-track" id="turn-track">
+      <h3>Turn Progress</h3>
+      <div class="turn-track-dots"></div>
+    </div>
+    <div class="siege-roles">
+      <div class="siege-role-card attacker">
+        <div class="siege-role-label">Attacker</div>
+        <div class="siege-role-name" id="siege-attacker-name">${p0.name}</div>
+      </div>
+      <div class="siege-role-card defender">
+        <div class="siege-role-label">Defender</div>
+        <div class="siege-role-name" id="siege-defender-name">${p1.name}</div>
+      </div>
+    </div>
+    <div class="objectives-section">
+      <h3>Objectives</h3>
+      <div class="objective-list">${objHtml}</div>
+    </div>
+    <div style="text-align:center; color:var(--text-muted); font-size:12px; margin-top:10px; padding:0 4px;">
+      Capture all 3 for a decisive victory. Hold 2 to win. Hold 1 or fewer — Defender wins!
+    </div>
+  `;
+}
+
+function renderPlayerPanel(idx, statKey, statLabel) {
+  const p = state.players[idx];
+  const cls = idx === 0 ? 'p1' : 'p2';
+  const val = p[statKey];
+
+  let controls = '';
+  if (statKey === 'kills') {
+    controls = `
+      <div class="kill-controls">
+        <button class="btn btn-icon btn-icon-danger" onclick="adjustKills(${idx}, -1)">−</button>
+        <div class="score-value">${val}</div>
+        <button class="btn btn-icon btn-icon-primary" onclick="adjustKills(${idx}, 1)">+</button>
+      </div>`;
+  } else {
+    controls = `<div class="score-value">${val}</div>`;
+  }
+
+  return `
+    <div class="player-panel ${cls}">
+      <div class="player-panel-header">
+        <div class="player-name-wrap">
+          <div class="player-name-display" id="pname-display-${idx}" onclick="startEditName(${idx})" title="Tap to edit">${escHtml(p.name)}</div>
+          <input class="player-name-input" id="pname-input-${idx}" value="${escHtml(p.name)}" onblur="finishEditName(${idx})" onkeydown="nameKeydown(event, ${idx})">
+          <span class="edit-icon" onclick="startEditName(${idx})">✏️</span>
+        </div>
+      </div>
+      <div class="player-score-area">
+        <div class="score-label">${statLabel}</div>
+        ${controls}
+      </div>
+    </div>`;
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ============================
+// NAME EDITING
+// ============================
+function attachNameEditing() {
+  // inputs are already rendered, no extra attachment needed
+}
+
+function startEditName(idx) {
+  const display = document.getElementById(`pname-display-${idx}`);
+  const input = document.getElementById(`pname-input-${idx}`);
+  if (!display || !input) return;
+  display.style.display = 'none';
+  input.style.display = 'block';
+  input.focus();
+  input.select();
+}
+
+function finishEditName(idx) {
+  const display = document.getElementById(`pname-display-${idx}`);
+  const input = document.getElementById(`pname-input-${idx}`);
+  if (!display || !input) return;
+  const newName = input.value.trim() || `Player ${idx + 1}`;
+  state.players[idx].name = newName;
+  display.textContent = newName;
+  input.style.display = 'none';
+  display.style.display = '';
+  // Update siege role names if visible
+  const sAtk = document.getElementById('siege-attacker-name');
+  const sDef = document.getElementById('siege-defender-name');
+  if (sAtk && idx === 0) sAtk.textContent = newName;
+  if (sDef && idx === 1) sDef.textContent = newName;
+  // Re-render objective toggles to update player names
+  if (state.mode === 'htl') {
+    const objList = document.querySelector('.objective-list');
+    if (objList) objList.innerHTML = buildHTLObjectiveHTML();
+  }
+}
+
+function nameKeydown(e, idx) {
+  if (e.key === 'Enter') finishEditName(idx);
+  if (e.key === 'Escape') {
+    const input = document.getElementById(`pname-input-${idx}`);
+    if (input) input.value = state.players[idx].name;
+    finishEditName(idx);
+  }
+}
+
+function buildHTLObjectiveHTML() {
+  const p0 = state.players[0];
+  const p1 = state.players[1];
+  let html = '';
+  state.objectives.forEach((obj, i) => {
+    html += `
+      <div class="objective-card">
+        <div class="objective-top">
+          <div class="objective-name">
+            ${obj.name}
+            ${obj.pts === 2 ? '<span class="obj-pts-badge">2 pts</span>' : '<span class="obj-pts-badge">1 pt</span>'}
+          </div>
+        </div>
+        <div class="objective-toggle">
+          <button class="toggle-btn ${obj.holder === 'p1' ? 'active-p1' : ''}" onclick="setObjHolder('htl', ${i}, 'p1')">${escHtml(p0.name)}</button>
+          <button class="toggle-btn ${obj.holder === 'contested' ? 'active-contested' : ''}" onclick="setObjHolder('htl', ${i}, 'contested')">Contested</button>
+          <button class="toggle-btn ${obj.holder === 'p2' ? 'active-p2' : ''}" onclick="setObjHolder('htl', ${i}, 'p2')">${escHtml(p1.name)}</button>
+        </div>
+      </div>`;
+  });
+  return html;
+}
+
+// ============================
+// KILLS
+// ============================
+function adjustKills(idx, delta) {
+  state.players[idx].kills = Math.max(0, state.players[idx].kills + delta);
+  const scoreEl = document.querySelector(`.player-panel.${idx === 0 ? 'p1' : 'p2'} .score-value`);
+  if (scoreEl) scoreEl.textContent = state.players[idx].kills;
+}
+
+// ============================
+// OBJECTIVES
+// ============================
+function setObjHolder(mode, idx, holder) {
+  if (mode === 'htl') {
+    state.objectives[idx].holder = holder;
+  } else {
+    state.siegeObjectives[idx].holder = holder;
+  }
+  // Update toggle buttons
+  const suffixes = mode === 'htl' ? ['p1','contested','p2'] : ['attacker','contested','defender'];
+  const values = mode === 'htl' ? ['p1','contested','p2'] : ['attacker','contested','defender'];
+  const prefix = mode === 'htl' ? 'htl' : 'siege';
+  suffixes.forEach((s, i) => {
+    const btn = document.getElementById(`${prefix}-toggle-${idx}-${s}`);
+    if (btn) {
+      btn.className = 'toggle-btn';
+      if (values[i] === holder) btn.classList.add(`active-${s}`);
+    }
+  });
+}
+
+// ============================
+// NEXT TURN / END GAME
+// ============================
+function nextTurn() {
+  if (state.mode === 'htl') {
+    scoreHTLTurn();
+  }
+
+  if (state.turn >= state.maxTurns) {
+    endGame();
+    return;
+  }
+
+  state.turn++;
+  updateTurnLabel();
+  renderBattle();
+}
+
+function scoreHTLTurn() {
+  state.objectives.forEach(obj => {
+    if (obj.holder === 'p1') state.players[0].score += obj.pts;
+    if (obj.holder === 'p2') state.players[1].score += obj.pts;
+  });
+  const s0 = document.querySelector('.player-panel.p1 .score-value');
+  const s1 = document.querySelector('.player-panel.p2 .score-value');
+  if (s0) s0.textContent = state.players[0].score;
+  if (s1) s1.textContent = state.players[1].score;
+}
+
+// ============================
+// END GAME
+// ============================
+function endGame() {
+  if (state.mode === 'los') {
+    const p0k = state.players[0].kills;
+    const p1k = state.players[1].kills;
+    if (p0k === p1k) {
+      showTiebreakModal();
+      return;
+    }
+    showResult();
+  } else if (state.mode === 'htl') {
+    showResult();
+  } else if (state.mode === 'siege') {
+    showResult();
+  }
+}
+
+function showResult() {
+  const mode = state.mode;
+  const p0 = state.players[0];
+  const p1 = state.players[1];
+  let trophy = '🏆';
+  let title = '';
+  let subtitle = '';
+  let winnerText = '';
+  let scoresHtml = '';
+
+  if (mode === 'los') {
+    const w = p0.kills > p1.kills ? 0 : 1;
+    title = `${state.players[w].name} wins!`;
+    subtitle = 'Most kills takes the victory';
+    winnerText = `👑 ${state.players[w].name} wins with ${state.players[w].kills} kills!`;
+    scoresHtml = `
+      <div class="result-score-row result-p1">
+        <span class="result-player-name">${escHtml(p0.name)}</span>
+        <span class="result-player-score">${p0.kills} kills</span>
+      </div>
+      <div class="result-score-row result-p2">
+        <span class="result-player-name">${escHtml(p1.name)}</span>
+        <span class="result-player-score">${p1.kills} kills</span>
+      </div>`;
+  } else if (mode === 'htl') {
+    const w = p0.score >= p1.score ? 0 : 1;
+    const tied = p0.score === p1.score;
+    title = tied ? "It's a Draw!" : `${state.players[w].name} wins!`;
+    subtitle = 'Most points wins the line';
+    winnerText = tied
+      ? `🤝 Both players scored ${p0.score} points — it's a draw!`
+      : `👑 ${state.players[w].name} wins with ${state.players[w].score} points!`;
+    scoresHtml = `
+      <div class="result-score-row result-p1">
+        <span class="result-player-name">${escHtml(p0.name)}</span>
+        <span class="result-player-score">${p0.score} pts</span>
+      </div>
+      <div class="result-score-row result-p2">
+        <span class="result-player-name">${escHtml(p1.name)}</span>
+        <span class="result-player-score">${p1.score} pts</span>
+      </div>`;
+  } else if (mode === 'siege') {
+    const attackerHeld = state.siegeObjectives.filter(o => o.holder === 'attacker').length;
+    let resultText = '';
+    if (attackerHeld === 3) {
+      title = `${p0.name} wins!`;
+      subtitle = 'Decisive Attacker Victory';
+      resultText = `💥 ${p0.name} captured all 3 objectives — Decisive Attacker Victory!`;
+      trophy = '⚔️';
+    } else if (attackerHeld === 2) {
+      title = `${p0.name} wins!`;
+      subtitle = 'Attacker Victory';
+      resultText = `⚔️ ${p0.name} captured 2 objectives — Attacker Victory!`;
+    } else if (attackerHeld === 1) {
+      title = `${p1.name} wins!`;
+      subtitle = 'Defender Victory';
+      resultText = `🛡️ ${p1.name} held the line — Defender Victory!`;
+    } else {
+      title = `${p1.name} wins!`;
+      subtitle = 'Decisive Defender Victory';
+      resultText = `🛡️ ${p1.name} repelled the assault — Decisive Defender Victory!`;
+      trophy = '🛡️';
+    }
+    winnerText = resultText;
+    scoresHtml = `
+      <div class="result-score-row result-p1">
+        <span class="result-player-name">⚔️ ${escHtml(p0.name)} (Attacker)</span>
+        <span class="result-player-score">${attackerHeld}/3 objs</span>
+      </div>
+      <div class="result-score-row result-p2">
+        <span class="result-player-name">🛡️ ${escHtml(p1.name)} (Defender)</span>
+        <span class="result-player-score">${3 - attackerHeld}/3 objs</span>
+      </div>`;
+  }
+
+  document.getElementById('result-trophy').textContent = trophy;
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-subtitle').textContent = subtitle;
+  document.getElementById('result-scores').innerHTML = scoresHtml;
+  document.getElementById('result-winner-row').textContent = winnerText;
+
+  showScreen('result');
+}
+
+// ============================
+// TIEBREAK MODAL
+// ============================
+function showTiebreakModal() {
+  document.getElementById('tiebreak-p1-label').textContent =
+    `${state.players[0].name} — Models Remaining`;
+  document.getElementById('tiebreak-p2-label').textContent =
+    `${state.players[1].name} — Models Remaining`;
+  document.getElementById('tiebreak-p1-input').value = 0;
+  document.getElementById('tiebreak-p2-input').value = 0;
+  const modal = document.getElementById('tiebreak-modal');
+  modal.style.display = 'flex';
+  requestAnimationFrame(() => modal.classList.add('show'));
+}
+
+function hideTiebreakModal() {
+  const modal = document.getElementById('tiebreak-modal');
+  modal.classList.remove('show');
+  setTimeout(() => modal.style.display = 'none', 200);
+}
+
+function resolveTiebreak() {
+  const p0models = parseInt(document.getElementById('tiebreak-p1-input').value) || 0;
+  const p1models = parseInt(document.getElementById('tiebreak-p2-input').value) || 0;
+  hideTiebreakModal();
+
+  // Temporarily adjust kills for display — use models remaining as tiebreak
+  // We store in score temporarily for display
+  state.players[0]._tiebreak = p0models;
+  state.players[1]._tiebreak = p1models;
+
+  const p0k = state.players[0].kills;
+  const p1k = state.players[1].kills;
+  const p0 = state.players[0];
+  const p1 = state.players[1];
+
+  let winnerText = '';
+  if (p0models > p1models) {
+    winnerText = `👑 ${p0.name} wins the tiebreak — more models remaining (${p0models} vs ${p1models})!`;
+  } else if (p1models > p0models) {
+    winnerText = `👑 ${p1.name} wins the tiebreak — more models remaining (${p1models} vs ${p0models})!`;
+  } else {
+    winnerText = `🤝 Still a perfect draw! Both players win equally!`;
+  }
+
+  const scoresHtml = `
+    <div class="result-score-row result-p1">
+      <span class="result-player-name">${escHtml(p0.name)}</span>
+      <span class="result-player-score">${p0.kills} kills · ${p0models} left</span>
+    </div>
+    <div class="result-score-row result-p2">
+      <span class="result-player-name">${escHtml(p1.name)}</span>
+      <span class="result-player-score">${p1.kills} kills · ${p1models} left</span>
+    </div>`;
+
+  document.getElementById('result-trophy').textContent = '🏆';
+  document.getElementById('result-title').textContent = 'Tiebreak!';
+  document.getElementById('result-subtitle').textContent = 'Equal kills — most models remaining wins';
+  document.getElementById('result-scores').innerHTML = scoresHtml;
+  document.getElementById('result-winner-row').textContent = winnerText;
+
+  showScreen('result');
+}
+
+// ============================
+// PLAY AGAIN
+// ============================
+function playAgain() {
+  startBattle(state.mode);
+}
+
+// ============================
+// INITIAL PHASE BODY HEIGHTS
+// ============================
+document.querySelectorAll('.phase-body').forEach(b => {
+  b.style.maxHeight = '0';
+});
+</script>
+</body>
+</html>
