@@ -1405,7 +1405,7 @@
     <div class="rules-header">
       <div class="app-logo">⚔️</div>
       <h1>Battle Buddies</h1>
-      <p>Warhammer 40K for kids and beginners</p>
+      <p>Play Warhammer 40K with your mates</p>
     </div>
 
     <div class="rules-content">
@@ -1425,7 +1425,7 @@
         </div>
       </div>
 
-      <p class="section-label">The Six Phases</p>
+      <p class="section-label">How a turn works</p>
       <div class="phase-list" id="phase-list">
 
         <div class="phase-card" id="phase-command">
@@ -1433,7 +1433,7 @@
             <div class="phase-icon shoot">📋</div>
             <div>
               <div class="phase-title">Command Phase</div>
-              <div class="phase-subtitle">Pick an order at the start of your turn</div>
+              <div class="phase-subtitle">Give your army a boost</div>
             </div>
             <span class="phase-chevron">▼</span>
           </div>
@@ -1453,7 +1453,7 @@
             <div class="phase-icon move">🦶</div>
             <div>
               <div class="phase-title">Movement</div>
-              <div class="phase-subtitle">Move up to 6 inches</div>
+              <div class="phase-subtitle">Get your soldiers moving</div>
             </div>
             <span class="phase-chevron">▼</span>
           </div>
@@ -1471,7 +1471,7 @@
             <div class="phase-icon shoot">🎯</div>
             <div>
               <div class="phase-title">Shooting</div>
-              <div class="phase-subtitle">Attack at range, up to 8"</div>
+              <div class="phase-subtitle">Shoot at the enemy</div>
             </div>
             <span class="phase-chevron">▼</span>
           </div>
@@ -1497,7 +1497,7 @@
             <div class="phase-icon charge">💨</div>
             <div>
               <div class="phase-title">Charge</div>
-              <div class="phase-subtitle">Rush into close combat</div>
+              <div class="phase-subtitle">Charge into the fight</div>
             </div>
             <span class="phase-chevron">▼</span>
           </div>
@@ -1515,7 +1515,7 @@
             <div class="phase-icon fight">👊</div>
             <div>
               <div class="phase-title">Fight</div>
-              <div class="phase-subtitle">Swing at close range</div>
+              <div class="phase-subtitle">Get stuck in</div>
             </div>
             <span class="phase-chevron">▼</span>
           </div>
@@ -1539,7 +1539,7 @@
             <div class="phase-icon fight">⚡</div>
             <div>
               <div class="phase-title">Battleshock</div>
-              <div class="phase-subtitle">Check nerve if you took losses</div>
+              <div class="phase-subtitle">Did your squad hold their nerve?</div>
             </div>
             <span class="phase-chevron">▼</span>
           </div>
@@ -1557,7 +1557,7 @@
 
     <div class="rules-cta">
       <button class="btn btn-navy btn-block btn-lg" onclick="showScreen('modes')">
-        Choose Game Mode →
+        Let's play
       </button>
     </div>
   </div>
@@ -1627,7 +1627,7 @@
 
     <div class="setup-cta">
       <button class="btn btn-navy btn-block btn-lg" onclick="startBattle()">
-        Start Battle →
+        Start the battle
       </button>
     </div>
   </div>
@@ -1648,8 +1648,8 @@
           <div class="bshock-q-text">Did you lose any models last turn?</div>
         </div>
         <div class="bshock-choices">
-          <button class="btn btn-outline btn-block btn-lg" onclick="battleshockNo()">No — all fine</button>
-          <button class="btn btn-navy btn-block btn-lg" onclick="battleshockYes()">Yes — we took losses</button>
+          <button class="btn btn-outline btn-block btn-lg" onclick="battleshockNo()">All good, no losses</button>
+          <button class="btn btn-navy btn-block btn-lg" onclick="battleshockYes()">Yes, we lost some</button>
         </div>
       </div>
 
@@ -1670,7 +1670,7 @@
           </div>
         </div>
         <div class="bshock-choices">
-          <button class="btn btn-outline btn-block btn-lg" onclick="battleshockHeld()">They held</button>
+          <button class="btn btn-outline btn-block btn-lg" onclick="battleshockHeld()">They held firm</button>
           <button class="btn btn-navy btn-block btn-lg" onclick="battleshockBroke()">They broke</button>
         </div>
       </div>
@@ -1690,7 +1690,7 @@
         <!-- Rendered by JS -->
       </div>
       <div class="command-skip">
-        <button class="btn btn-outline btn-block" onclick="selectOrder(null)">Continue without an order</button>
+        <button class="btn btn-outline btn-block" onclick="selectOrder(null)">Skip for now</button>
       </div>
     </div>
   </div>
@@ -1721,7 +1721,7 @@
     <div class="result-header">
       <div class="result-trophy" id="result-trophy">🏆</div>
       <div class="result-title" id="result-title">Game Over!</div>
-      <div class="result-subtitle" id="result-subtitle">Here's how it went</div>
+      <div class="result-subtitle" id="result-subtitle">That was a good fight</div>
     </div>
     <div class="result-content">
       <div class="result-card">
@@ -1730,8 +1730,8 @@
         <div class="result-winner-row" id="result-winner-row"></div>
       </div>
       <div class="result-actions">
-        <button class="btn btn-navy btn-lg" onclick="playAgain()">↺ Play Again</button>
-        <button class="btn btn-outline btn-lg" onclick="showScreen('modes')">Change Mode</button>
+        <button class="btn btn-navy btn-lg" onclick="playAgain()">↺ Same game, again</button>
+        <button class="btn btn-outline btn-lg" onclick="showScreen('modes')">Pick a different mode</button>
       </div>
     </div>
   </div>
@@ -1771,7 +1771,7 @@
             <div class="phase-icon move">🦶</div>
             <div>
               <div class="phase-title">Movement</div>
-              <div class="phase-subtitle">Move up to 6 inches</div>
+              <div class="phase-subtitle">Get your soldiers moving</div>
             </div>
             <span class="phase-chevron">▼</span>
           </div>
@@ -1789,7 +1789,7 @@
             <div class="phase-icon shoot">🎯</div>
             <div>
               <div class="phase-title">Shooting</div>
-              <div class="phase-subtitle">Attack at range, up to 8"</div>
+              <div class="phase-subtitle">Shoot at the enemy</div>
             </div>
             <span class="phase-chevron">▼</span>
           </div>
@@ -1815,7 +1815,7 @@
             <div class="phase-icon charge">💨</div>
             <div>
               <div class="phase-title">Charge</div>
-              <div class="phase-subtitle">Rush into close combat</div>
+              <div class="phase-subtitle">Charge into the fight</div>
             </div>
             <span class="phase-chevron">▼</span>
           </div>
@@ -1833,7 +1833,7 @@
             <div class="phase-icon fight">👊</div>
             <div>
               <div class="phase-title">Fight</div>
-              <div class="phase-subtitle">Swing at close range</div>
+              <div class="phase-subtitle">Get stuck in</div>
             </div>
             <span class="phase-chevron">▼</span>
           </div>
@@ -1972,7 +1972,7 @@ function togglePhase(id) {
 const SETUP_META = {
   los: {
     icon: '💀',
-    instruction: `<strong>Pick your sides.</strong> Set up your models at opposite ends of the table. Try to keep the numbers even. When you're ready, tap Start Battle.`,
+    instruction: `<strong>Pick your sides.</strong> Set up your models at opposite ends of the table. Try to keep the numbers even. When you're ready, tap Start the battle.`,
     checks: [
       { icon: '🪖', text: 'Both players pick their models' },
       { icon: '↔️', text: 'Set up at opposite ends of the table' },
@@ -1981,7 +1981,7 @@ const SETUP_META = {
   },
   htl: {
     icon: '🚩',
-    instruction: `<strong>Place three objective markers</strong> before anyone sets up. Spread them out — one on each side and one in the middle works well. Then both players set up at opposite ends as normal. When you're ready, tap Start Battle.`,
+    instruction: `<strong>Place three objective markers</strong> before anyone sets up. Spread them out — one on each side and one in the middle works well. Then both players set up at opposite ends as normal. When you're ready, tap Start the battle.`,
     checks: [
       { icon: '📍', text: 'Place one objective on the left' },
       { icon: '📍', text: 'Place one objective in the centre' },
@@ -1991,7 +1991,7 @@ const SETUP_META = {
   },
   siege: {
     icon: '🏰',
-    instruction: `<strong>Decide who is attacking and who is defending.</strong> The defender places three objectives anywhere in their half, then sets up their models there too. The attacker sets up along the opposite edge. Give the attacker 25% more models to keep things fair — if the defender has 8 models, the attacker gets 10. When you're ready, tap Start Battle.`,
+    instruction: `<strong>Decide who is attacking and who is defending.</strong> The defender places three objectives anywhere in their half, then sets up their models there too. The attacker sets up along the opposite edge. Give the attacker 25% more models to keep things fair — if the defender has 8 models, the attacker gets 10. When you're ready, tap Start the battle.`,
     checks: [
       { icon: '🛡️', text: 'Defender places 3 objectives in their half' },
       { icon: '🛡️', text: 'Defender sets up their models in their half' },
@@ -2081,7 +2081,7 @@ function showCommandPhase() {
   // If all orders used, hide the skip button label change
   const allUsed = p.usedOrders.length >= orderKeys.length;
   document.querySelector('.command-skip .btn').textContent =
-    allUsed ? 'Continue to Battle →' : 'Continue without an order';
+    allUsed ? 'Continue to Battle →' : 'Skip for now';
 
   showScreen('command');
 }
