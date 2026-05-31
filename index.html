@@ -50,8 +50,6 @@
 
   #app {
     min-height: 100vh;
-    max-width: 900px;
-    margin: 0 auto;
     position: relative;
     overflow-x: hidden;
   }
@@ -223,6 +221,8 @@
 
   .rules-content {
     padding: 20px 16px;
+    max-width: 900px;
+    margin: 0 auto;
   }
 
   .section-label {
@@ -364,6 +364,8 @@
 
   .rules-cta {
     padding: 0 16px 20px;
+    max-width: 900px;
+    margin: 0 auto;
   }
 
   /* ===================== SCREEN 2 — GAME MODES ===================== */
@@ -406,6 +408,8 @@
 
   .modes-content {
     padding: 20px 16px;
+    max-width: 900px;
+    margin: 0 auto;
   }
 
   .mode-cards {
@@ -468,6 +472,8 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+    max-width: 600px;
+    margin: 0 auto;
   }
 
   .setup-hero {
@@ -536,17 +542,16 @@
   .setup-cta {
     padding: 16px 16px 32px;
     margin-top: auto;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   @media (min-width: 600px) {
-    .setup-content { padding: 24px 24px 8px; }
-    .setup-cta { padding: 16px 24px 36px; }
-    .setup-hero-icon { font-size: 64px; }
-    .setup-instruction-text { font-size: 17px; }
-  }
-  @media (min-width: 768px) {
     .setup-content { padding: 28px 32px 8px; }
     .setup-cta { padding: 16px 32px 40px; }
+    .setup-hero-icon { font-size: 64px; }
+    .setup-instruction-text { font-size: 17px; }
   }
 
   /* ===================== SCREEN 2b — BATTLESHOCK ===================== */
@@ -581,6 +586,8 @@
     display: flex;
     flex-direction: column;
     gap: 14px;
+    max-width: 640px;
+    margin: 0 auto;
   }
 
   .bshock-question-card {
@@ -654,13 +661,10 @@
   }
 
   @media (min-width: 600px) {
-    .bshock-content { padding: 24px; }
+    .bshock-content { padding: 24px 32px; }
     .bshock-header { padding: 36px 32px 30px; }
     .bshock-choices { flex-direction: row; }
     .bshock-choices .btn { flex: 1; }
-  }
-  @media (min-width: 768px) {
-    .bshock-content { padding: 28px 32px; }
   }
 
   /* Shaken badge variant */
@@ -713,6 +717,8 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    max-width: 900px;
+    margin: 0 auto;
   }
   .command-order-list {
     display: flex;
@@ -786,13 +792,11 @@
   }
 
   @media (min-width: 600px) {
-    .command-content { padding: 24px; }
+    .command-content { padding: 24px 32px; }
     .command-header { padding: 40px 32px 36px; }
   }
-  @media (min-width: 768px) {
+  @media (min-width: 640px) {
     .command-order-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .command-content { padding: 28px 32px; }
-    .command-header { padding: 44px 32px 38px; }
   }
 
   /* Order badge on player panel */
@@ -841,7 +845,6 @@
   /* Battle Header */
   .battle-header {
     background: var(--navy);
-    padding: 14px 16px;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -851,6 +854,9 @@
     align-items: center;
     justify-content: space-between;
     gap: 8px;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 14px 16px;
   }
   .battle-header-back {
     width: 30px; height: 30px;
@@ -917,6 +923,8 @@
 
   .battle-content {
     padding: 16px;
+    max-width: 900px;
+    margin: 0 auto;
   }
 
   /* Player panels */
@@ -1163,6 +1171,8 @@
   }
   .result-content {
     padding: 20px 16px;
+    max-width: 900px;
+    margin: 0 auto;
   }
   .result-card {
     background: var(--surface);
@@ -1216,43 +1226,29 @@
 
   /* ===================== TABLET / RESPONSIVE ===================== */
   @media (min-width: 600px) {
-    .rules-content {
-      padding: 24px 24px;
-    }
-    .rules-cta { padding: 0 24px 24px; }
-    .modes-content { padding: 24px; }
-    .battle-content { padding: 20px 24px; }
-    .result-content { padding: 24px; }
-  }
+    .rules-content  { padding: 24px 32px; }
+    .rules-cta      { padding: 0 32px 28px; }
+    .modes-content  { padding: 24px 32px; }
+    .battle-content { padding: 20px 32px; }
+    .result-content { padding: 24px 32px; }
 
-  @media (min-width: 768px) {
     .rules-header { padding: 40px 32px 36px; }
     .rules-header h1 { font-size: 32px; }
-    .rules-content { padding: 28px 32px; }
-    .rules-cta { padding: 0 32px 28px; }
 
-    .core-numbers { grid-template-columns: repeat(3, 1fr); gap: 12px; }
     .core-number-card { padding: 18px 14px; }
     .core-number-card .num { font-size: 26px; }
 
-    .phase-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .phase-card.open {
-      grid-column: span 2;
-    }
+    .result-actions { flex-direction: row; }
+    .result-actions .btn { flex: 1; }
+  }
 
-    .modes-content { padding: 28px 32px; }
+  @media (min-width: 640px) {
     .mode-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
     .mode-card { flex-direction: column; text-align: center; padding: 24px 16px; }
     .mode-emoji { width: 56px; height: 56px; font-size: 28px; margin: 0 auto; }
     .mode-arrow { display: none; }
 
-    .battle-content { padding: 20px 32px; }
-
     .objective-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-
-    .result-content { padding: 28px 32px; }
-    .result-actions { flex-direction: row; }
-    .result-actions .btn { flex: 1; }
   }
 
   /* Tiebreak modal */
@@ -1386,7 +1382,7 @@
     padding-bottom: 32px;
   }
   @media (min-width: 600px) {
-    .rulebook-body { padding: 20px 24px 36px; }
+    .rulebook-body { padding: 24px 32px 40px; }
   }
 
   /* Utility */
