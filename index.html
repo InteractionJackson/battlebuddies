@@ -549,6 +549,153 @@
     .setup-cta { padding: 16px 32px 40px; }
   }
 
+  /* ===================== SCREEN 2b — BATTLESHOCK ===================== */
+  .bshock-header {
+    background: linear-gradient(135deg, #7c2d12 0%, #b45309 100%);
+    padding: 28px 20px 24px;
+    text-align: center;
+  }
+  .bshock-phase-tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 6px;
+  }
+  .bshock-round-line {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 4px;
+  }
+  .bshock-player-line {
+    font-size: 24px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -0.5px;
+  }
+
+  .bshock-content {
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .bshock-question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px 20px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 4px;
+  }
+  .bshock-q-icon { font-size: 40px; margin-bottom: 10px; }
+  .bshock-q-text {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.4;
+  }
+
+  .bshock-choices {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .bshock-roll-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .bshock-roll-icon { font-size: 36px; }
+  .bshock-roll-title { font-size: 17px; font-weight: 700; color: var(--text-primary); }
+
+  .bshock-result-row {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+  }
+  .bshock-result-item {
+    flex: 1;
+    border-radius: var(--radius-md);
+    padding: 10px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .bshock-result-good { background: #ecfdf5; border: 1px solid #a7f3d0; }
+  .bshock-result-bad  { background: #fff7ed; border: 1px solid #fed7aa; }
+  .bshock-result-die {
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .bshock-result-good .bshock-result-die { color: var(--success); }
+  .bshock-result-bad  .bshock-result-die { color: var(--warning); }
+  .bshock-result-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .bshock-roll-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.15s;
+    color: var(--text-primary);
+  }
+  .bshock-roll-input:focus { border-color: var(--blue-accent); }
+
+  @media (min-width: 600px) {
+    .bshock-content { padding: 24px; }
+    .bshock-header { padding: 36px 32px 30px; }
+    .bshock-choices { flex-direction: row; }
+    .bshock-choices .btn { flex: 1; }
+  }
+  @media (min-width: 768px) {
+    .bshock-content { padding: 28px 32px; }
+  }
+
+  /* Shaken badge variant */
+  .shaken-badge {
+    background: #92400e;
+  }
+
+  /* Shaken reminder banner */
+  .shaken-reminder {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .shaken-reminder .order-reminder-text { color: #78350f; }
+
   /* ===================== SCREEN 2c — COMMAND PHASE ===================== */
   .command-header {
     background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
@@ -1462,6 +1609,53 @@
     </div>
   </div>
 
+  <!-- ==================== SCREEN 2b: BATTLESHOCK CHECK ==================== -->
+  <div id="screen-battleshock" class="screen">
+    <div class="bshock-header">
+      <div class="bshock-phase-tag">⚡ Battleshock Check</div>
+      <div class="bshock-round-line" id="bshock-round-label">Round 1 of 5</div>
+      <div class="bshock-player-line" id="bshock-player-label">Player 1's Turn</div>
+    </div>
+    <div class="bshock-content">
+
+      <!-- Step 1: Yes / No -->
+      <div id="bshock-step1">
+        <div class="bshock-question-card">
+          <div class="bshock-q-icon">💀</div>
+          <div class="bshock-q-text">Did you lose any models last turn?</div>
+        </div>
+        <div class="bshock-choices">
+          <button class="btn btn-outline btn-block btn-lg" onclick="battleshockNo()">No — all fine</button>
+          <button class="btn btn-navy btn-block btn-lg" onclick="battleshockYes()">Yes — we took losses</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Roll the die -->
+      <div id="bshock-step2" style="display:none;">
+        <div class="bshock-roll-card">
+          <div class="bshock-roll-icon">🎲</div>
+          <div class="bshock-roll-title">Roll one die</div>
+          <div class="bshock-result-row">
+            <div class="bshock-result-item bshock-result-good">
+              <span class="bshock-result-die">3–6</span>
+              <span class="bshock-result-label">Hold their nerve</span>
+            </div>
+            <div class="bshock-result-item bshock-result-bad">
+              <span class="bshock-result-die">1–2</span>
+              <span class="bshock-result-label">Soldiers shaken — move 3" only</span>
+            </div>
+          </div>
+          <input type="number" id="bshock-roll-input" min="1" max="6"
+            placeholder="Enter result (1–6)" inputmode="numeric"
+            class="bshock-roll-input"
+            onkeydown="if(event.key==='Enter') battleshockConfirmRoll()">
+        </div>
+        <button class="btn btn-navy btn-block btn-lg" onclick="battleshockConfirmRoll()">Confirm Roll</button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- ==================== SCREEN 2c: COMMAND PHASE ==================== -->
   <div id="screen-command" class="screen">
     <div class="command-header">
@@ -1672,8 +1866,8 @@ const state = {
   activePlayer: 0,     // 0 or 1
   maxRounds: 5,
   players: [
-    { name: 'Player 1', kills: 0, score: 0, usedOrders: [], activeOrder: null },
-    { name: 'Player 2', kills: 0, score: 0, usedOrders: [], activeOrder: null }
+    { name: 'Player 1', kills: 0, score: 0, usedOrders: [], activeOrder: null, shaken: false },
+    { name: 'Player 2', kills: 0, score: 0, usedOrders: [], activeOrder: null, shaken: false }
   ],
   objectives: [
     { name: 'Objective 1', pts: 1, holder: 'contested' },
@@ -1805,6 +1999,43 @@ function showSetup(mode) {
 }
 
 // ============================
+// BATTLESHOCK CHECK
+// ============================
+function showBattleshockCheck() {
+  const ap = state.activePlayer;
+  const p = state.players[ap];
+  document.getElementById('bshock-round-label').textContent = `Round ${state.round} of ${state.maxRounds}`;
+  document.getElementById('bshock-player-label').textContent = `${p.name}'s Turn`;
+  // Reset to step 1
+  document.getElementById('bshock-step1').style.display = '';
+  document.getElementById('bshock-step2').style.display = 'none';
+  document.getElementById('bshock-roll-input').value = '';
+  showScreen('battleshock');
+}
+
+function battleshockNo() {
+  showCommandPhase();
+}
+
+function battleshockYes() {
+  document.getElementById('bshock-step1').style.display = 'none';
+  document.getElementById('bshock-step2').style.display = '';
+  document.getElementById('bshock-roll-input').focus();
+}
+
+function battleshockConfirmRoll() {
+  const val = parseInt(document.getElementById('bshock-roll-input').value);
+  if (!val || val < 1 || val > 6) {
+    document.getElementById('bshock-roll-input').style.borderColor = 'var(--danger)';
+    return;
+  }
+  if (val <= 2) {
+    state.players[state.activePlayer].shaken = true;
+  }
+  showCommandPhase();
+}
+
+// ============================
 // COMMAND PHASE
 // ============================
 function showCommandPhase() {
@@ -1862,10 +2093,12 @@ function startBattle() {
   state.players[0].score = 0;
   state.players[0].usedOrders = [];
   state.players[0].activeOrder = null;
+  state.players[0].shaken = false;
   state.players[1].kills = 0;
   state.players[1].score = 0;
   state.players[1].usedOrders = [];
   state.players[1].activeOrder = null;
+  state.players[1].shaken = false;
   state.objectives.forEach(o => o.holder = 'contested');
   state.siegeObjectives.forEach(o => o.holder = 'contested');
 
@@ -1916,6 +2149,16 @@ function renderOrderReminder() {
     </div>`;
 }
 
+function renderShakenReminder() {
+  const p = state.players[state.activePlayer];
+  if (!p.shaken) return '';
+  return `
+    <div class="shaken-reminder">
+      <div class="order-reminder-icon">⚠️</div>
+      <div class="order-reminder-text"><strong>Shaken:</strong> Your models are shaken — move up to 3 inches this turn only.</div>
+    </div>`;
+}
+
 function renderLOS() {
   return `
     <div class="turn-track" id="turn-track">
@@ -1923,6 +2166,7 @@ function renderLOS() {
       <div class="turn-track-dots"></div>
     </div>
     ${renderOrderReminder()}
+    ${renderShakenReminder()}
     <div class="player-panels">
       ${renderPlayerPanel(0, 'kills', '⚔️ Kills')}
       ${renderPlayerPanel(1, 'kills', '⚔️ Kills')}
@@ -1959,6 +2203,7 @@ function renderHTL() {
       <div class="turn-track-dots"></div>
     </div>
     ${renderOrderReminder()}
+    ${renderShakenReminder()}
     <div class="player-panels">
       ${renderPlayerPanel(0, 'score', '🚩 Points')}
       ${renderPlayerPanel(1, 'score', '🚩 Points')}
@@ -1996,6 +2241,7 @@ function renderSiege() {
       <div class="turn-track-dots"></div>
     </div>
     ${renderOrderReminder()}
+    ${renderShakenReminder()}
     <div class="siege-roles">
       <div class="siege-role-card attacker">
         <div class="siege-role-label">Attacker</div>
@@ -2035,9 +2281,12 @@ function renderPlayerPanel(idx, statKey, statLabel) {
   }
 
   let orderBadge = '';
+  if (isActive && p.shaken) {
+    orderBadge += `<div class="order-badge shaken-badge">⚠️ Shaken — Move 3"</div>`;
+  }
   if (isActive && p.activeOrder) {
     const o = ORDERS[p.activeOrder];
-    orderBadge = `<div class="order-badge">${o.icon} ${o.name}</div>`;
+    orderBadge += `<div class="order-badge">${o.icon} ${o.name}</div>`;
   }
 
   return `
@@ -2171,13 +2420,15 @@ function nextTurn() {
     scoreHTLTurn();
   }
 
-  // Clear the active player's order badge for next turn
-  state.players[state.activePlayer].activeOrder = null;
+  // Clear the ending player's per-turn state
+  const ending = state.activePlayer;
+  state.players[ending].activeOrder = null;
+  state.players[ending].shaken = false;
 
   // Advance: P1 → P2, or P2 → next round P1
   if (state.activePlayer === 0) {
     state.activePlayer = 1;
-    showCommandPhase();
+    showBattleshockCheck();
   } else {
     if (state.round >= state.maxRounds) {
       endGame();
@@ -2185,7 +2436,7 @@ function nextTurn() {
     }
     state.round++;
     state.activePlayer = 0;
-    showCommandPhase();
+    showBattleshockCheck();
   }
 }
 
