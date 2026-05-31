@@ -549,6 +549,158 @@
     .setup-cta { padding: 16px 32px 40px; }
   }
 
+  /* ===================== SCREEN 2c — COMMAND PHASE ===================== */
+  .command-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    padding: 32px 20px 28px;
+    text-align: center;
+  }
+  .command-round-line {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 6px;
+  }
+  .command-player-line {
+    font-size: 26px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+  .command-subtitle {
+    font-size: 14px;
+    color: rgba(255,255,255,0.65);
+    font-weight: 500;
+  }
+
+  .command-content {
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .command-order-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .order-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: var(--shadow-sm);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .order-card:hover:not(.order-used) {
+    border-color: var(--blue-accent);
+    box-shadow: 0 0 0 4px rgba(59,91,219,0.08), var(--shadow-md);
+    transform: translateY(-1px);
+  }
+  .order-card:active:not(.order-used) { transform: scale(0.98); }
+  .order-card.order-used {
+    opacity: 0.42;
+    cursor: default;
+    pointer-events: none;
+  }
+  .order-card-icon {
+    font-size: 26px;
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    background: var(--border-light);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .order-card-info { flex: 1; }
+  .order-card-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+  .order-card-effect {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+  .order-used-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: var(--border-light);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 8px;
+    flex-shrink: 0;
+    display: none;
+  }
+  .order-card.order-used .order-used-tag { display: block; }
+
+  .command-skip {
+    padding-top: 4px;
+  }
+
+  @media (min-width: 600px) {
+    .command-content { padding: 24px; }
+    .command-header { padding: 40px 32px 36px; }
+  }
+  @media (min-width: 768px) {
+    .command-order-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .command-content { padding: 28px 32px; }
+    .command-header { padding: 44px 32px 38px; }
+  }
+
+  /* Order badge on player panel */
+  .order-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 5px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--navy);
+    color: white;
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Active player panel highlight */
+  .player-panel.active-turn {
+    box-shadow: 0 0 0 3px var(--blue-accent), var(--shadow-md);
+  }
+
+  /* Order reminder banner in battle */
+  .order-reminder {
+    background: #f0f4ff;
+    border: 1px solid #c7d2fe;
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .order-reminder-icon { font-size: 18px; flex-shrink: 0; }
+  .order-reminder-text { font-size: 13px; color: #3730a3; font-weight: 500; line-height: 1.4; }
+  .order-reminder-text strong { font-weight: 700; }
+
   /* ===================== SCREEN 3 — BATTLE ===================== */
   #screen-battle {
     padding-bottom: 40px;
@@ -1310,6 +1462,23 @@
     </div>
   </div>
 
+  <!-- ==================== SCREEN 2c: COMMAND PHASE ==================== -->
+  <div id="screen-command" class="screen">
+    <div class="command-header">
+      <div class="command-round-line" id="cmd-round-label">Round 1 of 5</div>
+      <div class="command-player-line" id="cmd-player-label">Player 1's Turn</div>
+      <div class="command-subtitle">Pick your command order</div>
+    </div>
+    <div class="command-content">
+      <div class="command-order-list" id="cmd-order-list">
+        <!-- Rendered by JS -->
+      </div>
+      <div class="command-skip">
+        <button class="btn btn-outline btn-block" onclick="selectOrder(null)">Continue without an order</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== SCREEN 3: BATTLE ==================== -->
   <div id="screen-battle" class="screen">
     <div class="battle-header">
@@ -1499,11 +1668,12 @@
 // ============================
 const state = {
   mode: null,          // 'los' | 'htl' | 'siege'
-  turn: 1,
-  maxTurns: 5,
+  round: 1,
+  activePlayer: 0,     // 0 or 1
+  maxRounds: 5,
   players: [
-    { name: 'Player 1', kills: 0, score: 0 },
-    { name: 'Player 2', kills: 0, score: 0 }
+    { name: 'Player 1', kills: 0, score: 0, usedOrders: [], activeOrder: null },
+    { name: 'Player 2', kills: 0, score: 0, usedOrders: [], activeOrder: null }
   ],
   objectives: [
     { name: 'Objective 1', pts: 1, holder: 'contested' },
@@ -1521,6 +1691,13 @@ const MODE_META = {
   los:  { label: 'Last One Standing', emoji: '💀' },
   htl:  { label: 'Hold the Line',     emoji: '🚩' },
   siege:{ label: 'Siege',             emoji: '🏰' }
+};
+
+const ORDERS = {
+  advance:   { key: 'advance',   name: 'Advance',        icon: '🏃', tagline: 'Move further this turn',    effect: 'Move up to 9" instead of 6" this turn',          phase: 'move'   },
+  focusfire: { key: 'focusfire', name: 'Focus Fire',      icon: '🎯', tagline: 'Sharpen your aim',          effect: 'Re-roll hit rolls of 1 during shooting',          phase: 'shoot'  },
+  holdline:  { key: 'holdline',  name: 'Hold the Line',   icon: '🛡️', tagline: 'Armour up',                effect: 'Your saves are 3+ instead of 4+ this turn',       phase: 'save'   },
+  charge:    { key: 'charge',    name: 'Charge!',         icon: '⚡', tagline: 'Rush the enemy',            effect: 'Add 2 to all charge roll results this turn',      phase: 'charge' }
 };
 
 // ============================
@@ -1628,29 +1805,80 @@ function showSetup(mode) {
 }
 
 // ============================
-// BATTLE INIT
+// COMMAND PHASE
 // ============================
-function startBattle() {
-  const mode = state.mode;
-  state.turn = 1;
-  state.players[0].kills = 0;
-  state.players[0].score = 0;
-  state.players[1].kills = 0;
-  state.players[1].score = 0;
-  state.objectives.forEach(o => o.holder = 'contested');
-  state.siegeObjectives.forEach(o => o.holder = 'contested');
+function showCommandPhase() {
+  const ap = state.activePlayer;
+  const p = state.players[ap];
+  const pColor = ap === 0 ? 'var(--p1-color)' : 'var(--p2-color)';
 
-  document.getElementById('battle-mode-label').textContent = MODE_META[mode].label;
+  document.getElementById('cmd-round-label').textContent = `Round ${state.round} of ${state.maxRounds}`;
+  document.getElementById('cmd-player-label').textContent = `${p.name}'s Turn`;
+
+  const orderKeys = ['advance', 'focusfire', 'holdline', 'charge'];
+  const listEl = document.getElementById('cmd-order-list');
+  listEl.innerHTML = orderKeys.map(key => {
+    const o = ORDERS[key];
+    const used = p.usedOrders.includes(key);
+    return `
+      <div class="order-card ${used ? 'order-used' : ''}" onclick="selectOrder('${key}')">
+        <div class="order-card-icon">${o.icon}</div>
+        <div class="order-card-info">
+          <div class="order-card-name">${o.name}</div>
+          <div class="order-card-effect">${o.effect}</div>
+        </div>
+        <span class="order-used-tag">Used</span>
+      </div>`;
+  }).join('');
+
+  // If all orders used, hide the skip button label change
+  const allUsed = p.usedOrders.length >= orderKeys.length;
+  document.querySelector('.command-skip .btn').textContent =
+    allUsed ? 'Continue to Battle →' : 'Continue without an order';
+
+  showScreen('command');
+}
+
+function selectOrder(key) {
+  const ap = state.activePlayer;
+  const p = state.players[ap];
+  p.activeOrder = key;
+  if (key && !p.usedOrders.includes(key)) {
+    p.usedOrders.push(key);
+  }
   updateTurnLabel();
   renderBattle();
   showScreen('battle');
 }
 
+// ============================
+// BATTLE INIT
+// ============================
+function startBattle() {
+  const mode = state.mode;
+  state.round = 1;
+  state.activePlayer = 0;
+  state.players[0].kills = 0;
+  state.players[0].score = 0;
+  state.players[0].usedOrders = [];
+  state.players[0].activeOrder = null;
+  state.players[1].kills = 0;
+  state.players[1].score = 0;
+  state.players[1].usedOrders = [];
+  state.players[1].activeOrder = null;
+  state.objectives.forEach(o => o.holder = 'contested');
+  state.siegeObjectives.forEach(o => o.holder = 'contested');
+
+  document.getElementById('battle-mode-label').textContent = MODE_META[mode].label;
+  showCommandPhase();
+}
+
 function updateTurnLabel() {
+  const p = state.players[state.activePlayer];
   document.getElementById('battle-turn-label').textContent =
-    `Turn ${state.turn} of ${state.maxTurns}`;
-  const btn = document.getElementById('battle-next-btn');
-  btn.textContent = state.turn >= state.maxTurns ? 'End Game →' : `Next Turn →`;
+    `Round ${state.round} of ${state.maxRounds} — ${p.name}'s Turn`;
+  const isLast = state.round >= state.maxRounds && state.activePlayer === 1;
+  document.getElementById('battle-next-btn').textContent = isLast ? 'End Game →' : 'Next Turn →';
 }
 
 // ============================
@@ -1667,25 +1895,34 @@ function renderBattle() {
 }
 
 function renderTurnTrack() {
-  // Inject turn track before player panels if not already
   let track = document.getElementById('turn-track');
   if (!track) return;
   let html = '';
-  for (let i = 1; i <= state.maxTurns; i++) {
-    let cls = i < state.turn ? 'done' : i === state.turn ? 'current' : '';
+  for (let i = 1; i <= state.maxRounds; i++) {
+    let cls = i < state.round ? 'done' : i === state.round ? 'current' : '';
     html += `<div class="turn-dot ${cls}"></div>`;
   }
   track.querySelector('.turn-track-dots').innerHTML = html;
 }
 
+function renderOrderReminder() {
+  const p = state.players[state.activePlayer];
+  if (!p.activeOrder) return '';
+  const o = ORDERS[p.activeOrder];
+  return `
+    <div class="order-reminder">
+      <div class="order-reminder-icon">${o.icon}</div>
+      <div class="order-reminder-text"><strong>${o.name}:</strong> ${o.effect}</div>
+    </div>`;
+}
+
 function renderLOS() {
-  const p0 = state.players[0];
-  const p1 = state.players[1];
   return `
     <div class="turn-track" id="turn-track">
-      <h3>Turn Progress</h3>
+      <h3>Round Progress</h3>
       <div class="turn-track-dots"></div>
     </div>
+    ${renderOrderReminder()}
     <div class="player-panels">
       ${renderPlayerPanel(0, 'kills', '⚔️ Kills')}
       ${renderPlayerPanel(1, 'kills', '⚔️ Kills')}
@@ -1718,9 +1955,10 @@ function renderHTL() {
   });
   return `
     <div class="turn-track" id="turn-track">
-      <h3>Turn Progress</h3>
+      <h3>Round Progress</h3>
       <div class="turn-track-dots"></div>
     </div>
+    ${renderOrderReminder()}
     <div class="player-panels">
       ${renderPlayerPanel(0, 'score', '🚩 Points')}
       ${renderPlayerPanel(1, 'score', '🚩 Points')}
@@ -1730,7 +1968,7 @@ function renderHTL() {
       <div class="objective-list">${objHtml}</div>
     </div>
     <div style="text-align:center; color:var(--text-muted); font-size:12px; margin-top:10px;">
-      Points are scored at the <strong>end of each turn</strong> — tap Next Turn to add them.
+      Points are scored at the <strong>end of each round</strong> — tap Next Turn after Player 2.
     </div>
   `;
 }
@@ -1754,9 +1992,10 @@ function renderSiege() {
   });
   return `
     <div class="turn-track" id="turn-track">
-      <h3>Turn Progress</h3>
+      <h3>Round Progress</h3>
       <div class="turn-track-dots"></div>
     </div>
+    ${renderOrderReminder()}
     <div class="siege-roles">
       <div class="siege-role-card attacker">
         <div class="siege-role-label">Attacker</div>
@@ -1781,6 +2020,7 @@ function renderPlayerPanel(idx, statKey, statLabel) {
   const p = state.players[idx];
   const cls = idx === 0 ? 'p1' : 'p2';
   const val = p[statKey];
+  const isActive = state.activePlayer === idx;
 
   let controls = '';
   if (statKey === 'kills') {
@@ -1794,14 +2034,21 @@ function renderPlayerPanel(idx, statKey, statLabel) {
     controls = `<div class="score-value">${val}</div>`;
   }
 
+  let orderBadge = '';
+  if (isActive && p.activeOrder) {
+    const o = ORDERS[p.activeOrder];
+    orderBadge = `<div class="order-badge">${o.icon} ${o.name}</div>`;
+  }
+
   return `
-    <div class="player-panel ${cls}">
+    <div class="player-panel ${cls}${isActive ? ' active-turn' : ''}">
       <div class="player-panel-header">
         <div class="player-name-wrap">
           <div class="player-name-display" id="pname-display-${idx}" onclick="startEditName(${idx})" title="Tap to edit">${escHtml(p.name)}</div>
           <input class="player-name-input" id="pname-input-${idx}" value="${escHtml(p.name)}" onblur="finishEditName(${idx})" onkeydown="nameKeydown(event, ${idx})">
           <span class="edit-icon" onclick="startEditName(${idx})">✏️</span>
         </div>
+        ${orderBadge}
       </div>
       <div class="player-score-area">
         <div class="score-label">${statLabel}</div>
@@ -1919,18 +2166,27 @@ function setObjHolder(mode, idx, holder) {
 // NEXT TURN / END GAME
 // ============================
 function nextTurn() {
-  if (state.mode === 'htl') {
+  // HTL scores at end of each full round (after P2's half)
+  if (state.mode === 'htl' && state.activePlayer === 1) {
     scoreHTLTurn();
   }
 
-  if (state.turn >= state.maxTurns) {
-    endGame();
-    return;
-  }
+  // Clear the active player's order badge for next turn
+  state.players[state.activePlayer].activeOrder = null;
 
-  state.turn++;
-  updateTurnLabel();
-  renderBattle();
+  // Advance: P1 → P2, or P2 → next round P1
+  if (state.activePlayer === 0) {
+    state.activePlayer = 1;
+    showCommandPhase();
+  } else {
+    if (state.round >= state.maxRounds) {
+      endGame();
+      return;
+    }
+    state.round++;
+    state.activePlayer = 0;
+    showCommandPhase();
+  }
 }
 
 function scoreHTLTurn() {
@@ -1938,10 +2194,7 @@ function scoreHTLTurn() {
     if (obj.holder === 'p1') state.players[0].score += obj.pts;
     if (obj.holder === 'p2') state.players[1].score += obj.pts;
   });
-  const s0 = document.querySelector('.player-panel.p1 .score-value');
-  const s1 = document.querySelector('.player-panel.p2 .score-value');
-  if (s0) s0.textContent = state.players[0].score;
-  if (s1) s1.textContent = state.players[1].score;
+  // Scores reflected via re-render in nextTurn → showCommandPhase → renderBattle
 }
 
 // ============================
