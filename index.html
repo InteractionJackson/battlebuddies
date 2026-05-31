@@ -1399,6 +1399,88 @@
   .mt-3 { margin-top: 12px; }
   .mt-4 { margin-top: 16px; }
   .mb-2 { margin-bottom: 8px; }
+
+  /* ===================== BATTLE REPORT ===================== */
+  .battle-report-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    margin-top: 16px;
+  }
+  .battle-report-card-header {
+    background: var(--border-light);
+    padding: 10px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .battle-report-body {
+    padding: 16px;
+  }
+  .battle-report-text p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    margin-bottom: 12px;
+  }
+  .battle-report-text p:last-child { margin-bottom: 0; }
+  .battle-report-loading {
+    text-align: center;
+    padding: 24px 16px;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-style: italic;
+  }
+  .battle-report-error {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-style: italic;
+    padding: 16px;
+  }
+
+  /* API Key entry */
+  .api-key-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    box-shadow: var(--shadow-sm);
+    margin-top: 12px;
+  }
+  .api-key-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+  }
+  .api-key-row {
+    display: flex;
+    gap: 8px;
+  }
+  .api-key-input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s;
+    background: var(--bg);
+  }
+  .api-key-input:focus { border-color: var(--blue-accent); }
+  .api-key-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    line-height: 1.4;
+  }
 </style>
 </head>
 <body>
@@ -1720,6 +1802,28 @@
         <button class="btn btn-navy btn-lg" onclick="playAgain()">↺ Same game, again</button>
         <button class="btn btn-outline btn-lg" onclick="showScreen('modes')">Pick a different mode</button>
       </div>
+
+      <button class="btn btn-outline btn-block btn-lg" id="battle-report-btn" onclick="generateBattleReport()" style="margin-top:10px;">
+        📜 Read the Battle Report
+      </button>
+
+      <div id="api-key-section" class="hidden">
+        <div class="api-key-card">
+          <div class="api-key-label">Enter your Anthropic API key to generate battle reports</div>
+          <div class="api-key-row">
+            <input type="password" id="api-key-input" class="api-key-input" placeholder="sk-ant-…" autocomplete="off" onkeydown="if(event.key==='Enter')saveApiKey()">
+            <button class="btn btn-primary" onclick="saveApiKey()">Save</button>
+          </div>
+          <div class="api-key-hint">Your key is saved on this device only and sent nowhere except the Anthropic API.</div>
+        </div>
+      </div>
+
+      <div id="battle-report-section" class="hidden">
+        <div class="battle-report-card">
+          <div class="battle-report-card-header">📖 Battle Report</div>
+          <div id="battle-report-content"></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1906,7 +2010,8 @@ const state = {
     { name: 'Objective 1', holder: 'contested' },
     { name: 'Objective 2', holder: 'contested' },
     { name: 'Objective 3', holder: 'contested' }
-  ]
+  ],
+  battleLog: []
 };
 
 const MODE_META = {
@@ -2049,10 +2154,12 @@ function battleshockYes() {
 }
 
 function battleshockHeld() {
+  logEvent('battleshock_held', { round: state.round, player: state.players[state.activePlayer].name });
   showCommandPhase();
 }
 
 function battleshockBroke() {
+  logEvent('battleshock_broke', { round: state.round, player: state.players[state.activePlayer].name });
   state.players[state.activePlayer].shaken = true;
   showCommandPhase();
 }
@@ -2101,6 +2208,11 @@ function showCommandPhase() {
 function selectOrder(key) {
   const ap = state.activePlayer;
   const p = state.players[ap];
+  if (key) {
+    logEvent('order', { round: state.round, player: p.name, orderKey: key });
+  } else {
+    logEvent('order_skip', { round: state.round, player: p.name });
+  }
   p.activeOrder = key;
   if (key && !p.usedOrders.includes(key)) {
     p.usedOrders.push(key);
@@ -2117,6 +2229,8 @@ function selectOrder(key) {
 // ============================
 function startBattle() {
   const mode = state.mode;
+  state.battleLog = [];
+  resetBattleReport();
   state.round = 1;
   state.activePlayer = 0;
   state.players[0].kills = 0;
@@ -2450,6 +2564,14 @@ function nextTurn() {
     scoreHTLTurn();
   }
 
+  // Snapshot both players' stats for the battle log
+  logEvent('halfturn_end', {
+    round: state.round,
+    player: state.players[state.activePlayer].name,
+    p0kills: state.players[0].kills, p0score: state.players[0].score,
+    p1kills: state.players[1].kills, p1score: state.players[1].score
+  });
+
   // Clear the ending player's per-turn state
   const ending = state.activePlayer;
   state.players[ending].activeOrder = null;
@@ -2498,6 +2620,7 @@ function endGame() {
 }
 
 function showResult() {
+  resetBattleReport();
   const mode = state.mode;
   const p0 = state.players[0];
   const p1 = state.players[1];
@@ -2695,6 +2818,130 @@ function toggleRbPhase(id) {
     card.classList.add('open');
     body.style.maxHeight = body.scrollHeight + 'px';
   }
+}
+
+// ============================
+// BATTLE LOG
+// ============================
+function logEvent(type, data) {
+  state.battleLog.push(Object.assign({ type }, data));
+}
+
+function buildBattleContext() {
+  const mode = state.mode;
+  const p0 = state.players[0];
+  const p1 = state.players[1];
+  let ctx = `BATTLE REPORT DATA\n\nMode: ${MODE_META[mode].label}\nCommander 1: ${p0.name} | Commander 2: ${p1.name}\n\nTURN EVENTS:\n`;
+
+  state.battleLog.forEach(e => {
+    if (e.type === 'order') {
+      const o = ORDERS[e.orderKey];
+      ctx += `Round ${e.round} — ${e.player}: issued the ${o.name} command (${o.effect})\n`;
+    } else if (e.type === 'order_skip') {
+      ctx += `Round ${e.round} — ${e.player}: issued no command order\n`;
+    } else if (e.type === 'battleshock_held') {
+      ctx += `Round ${e.round} — ${e.player}: Battleshock passed — squad held their nerve\n`;
+    } else if (e.type === 'battleshock_broke') {
+      ctx += `Round ${e.round} — ${e.player}: Battleshock FAILED — squad was shaken (move 3" only)\n`;
+    } else if (e.type === 'halfturn_end') {
+      if (mode === 'los') {
+        ctx += `Round ${e.round}, end of ${e.player}'s half: ${p0.name} ${e.p0kills} kills | ${p1.name} ${e.p1kills} kills\n`;
+      } else if (mode === 'htl') {
+        ctx += `Round ${e.round}, end of ${e.player}'s half: ${p0.name} ${e.p0score} pts | ${p1.name} ${e.p1score} pts\n`;
+      }
+    }
+  });
+
+  ctx += '\nFINAL RESULT:\n';
+  if (mode === 'los') {
+    const w = p0.kills > p1.kills ? p0.name : (p1.kills > p0.kills ? p1.name : null);
+    ctx += w ? `${w} wins — ${p0.name}: ${p0.kills} kills, ${p1.name}: ${p1.kills} kills\n`
+             : `Draw — both commanders scored ${p0.kills} kills\n`;
+  } else if (mode === 'htl') {
+    const w = p0.score > p1.score ? p0.name : (p1.score > p0.score ? p1.name : null);
+    ctx += w ? `${w} wins — ${p0.name}: ${p0.score} pts, ${p1.name}: ${p1.score} pts\n`
+             : `Draw — both commanders scored ${p0.score} points\n`;
+  } else if (mode === 'siege') {
+    const held = state.siegeObjectives.filter(o => o.holder === 'attacker').length;
+    ctx += `${p0.name} (Attacker) captured ${held}/3 objectives — `;
+    ctx += held >= 2 ? `${p0.name} wins\n` : `${p1.name} (Defender) wins\n`;
+  }
+  return ctx;
+}
+
+// ============================
+// BATTLE REPORT
+// ============================
+function resetBattleReport() {
+  const btn = document.getElementById('battle-report-btn');
+  if (btn) { btn.disabled = false; btn.textContent = '📜 Read the Battle Report'; }
+  const keySection = document.getElementById('api-key-section');
+  if (keySection) keySection.classList.add('hidden');
+  const reportSection = document.getElementById('battle-report-section');
+  if (reportSection) reportSection.classList.add('hidden');
+  const content = document.getElementById('battle-report-content');
+  if (content) content.innerHTML = '';
+}
+
+async function generateBattleReport() {
+  const apiKey = localStorage.getItem('bb_anthropic_key');
+  if (!apiKey) {
+    document.getElementById('api-key-section').classList.remove('hidden');
+    document.getElementById('api-key-input').focus();
+    return;
+  }
+
+  const btn = document.getElementById('battle-report-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Generating…';
+  document.getElementById('api-key-section').classList.add('hidden');
+
+  const section = document.getElementById('battle-report-section');
+  const content = document.getElementById('battle-report-content');
+  section.classList.remove('hidden');
+  content.innerHTML = '<div class="battle-report-loading">The scribes are writing…</div>';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 600,
+        system: 'You are a Warhammer 40K Black Library author. Write a grimdark battle report as a short story of no more than 3 paragraphs. Use the game events provided to shape the narrative. Reference the players as opposing commanders. Make it dramatic, atmospheric, and gloriously over the top in the Black Library style. No lists, no commentary, just pure narrative prose.',
+        messages: [{ role: 'user', content: buildBattleContext() }]
+      })
+    });
+
+    if (!res.ok) {
+      if (res.status === 401) localStorage.removeItem('bb_anthropic_key');
+      throw new Error(res.status);
+    }
+
+    const data = await res.json();
+    const story = data.content[0].text.trim();
+    const html = story.split(/\n\n+/).map(p => `<p>${escHtml(p)}</p>`).join('');
+    content.innerHTML = `<div class="battle-report-body"><div class="battle-report-text">${html}</div></div>`;
+    btn.textContent = '📜 Battle Report';
+
+  } catch (err) {
+    content.innerHTML = '<div class="battle-report-error">The scribes were lost in battle. No report today.</div>';
+    btn.disabled = false;
+    btn.textContent = '📜 Read the Battle Report';
+  }
+}
+
+function saveApiKey() {
+  const val = document.getElementById('api-key-input').value.trim();
+  if (!val) return;
+  localStorage.setItem('bb_anthropic_key', val);
+  document.getElementById('api-key-section').classList.add('hidden');
+  generateBattleReport();
 }
 </script>
 </body>
