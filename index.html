@@ -791,9 +791,17 @@
     padding-top: 4px;
   }
 
+  .command-modal-box {
+    max-width: 560px;
+    padding: 0;
+    overflow: hidden;
+  }
+
   @media (min-width: 600px) {
     .command-content { padding: 24px 32px; }
     .command-header { padding: 40px 32px 36px; }
+    .command-modal-box .command-header { padding: 24px 20px 20px; }
+    .command-modal-box .command-content { padding: 16px 20px; }
   }
   @media (min-width: 640px) {
     .command-order-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -1674,23 +1682,6 @@
     </div>
   </div>
 
-  <!-- ==================== SCREEN 2c: COMMAND PHASE ==================== -->
-  <div id="screen-command" class="screen">
-    <div class="command-header">
-      <div class="command-round-line" id="cmd-round-label">Round 1 of 5</div>
-      <div class="command-player-line" id="cmd-player-label">Player 1's Turn</div>
-      <div class="command-subtitle">Pick your command order</div>
-    </div>
-    <div class="command-content">
-      <div class="command-order-list" id="cmd-order-list">
-        <!-- Rendered by JS -->
-      </div>
-      <div class="command-skip">
-        <button class="btn btn-outline btn-block" onclick="selectOrder(null)">Skip for now</button>
-      </div>
-    </div>
-  </div>
-
   <!-- ==================== SCREEN 3: BATTLE ==================== -->
   <div id="screen-battle" class="screen">
     <div class="battle-header">
@@ -1848,6 +1839,25 @@
           </div>
         </div>
 
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Command Phase Modal -->
+<div class="modal-overlay" id="command-modal">
+  <div class="modal-box command-modal-box">
+    <div class="command-header">
+      <div class="command-round-line" id="cmd-round-label">Round 1 of 5</div>
+      <div class="command-player-line" id="cmd-player-label">Player 1's Turn</div>
+      <div class="command-subtitle">Pick your command order</div>
+    </div>
+    <div class="command-content">
+      <div class="command-order-list" id="cmd-order-list">
+        <!-- Rendered by JS -->
+      </div>
+      <div class="command-skip">
+        <button class="btn btn-outline btn-block" onclick="selectOrder(null)">Skip for now</button>
       </div>
     </div>
   </div>
@@ -2053,7 +2063,6 @@ function battleshockBroke() {
 function showCommandPhase() {
   const ap = state.activePlayer;
   const p = state.players[ap];
-  const pColor = ap === 0 ? 'var(--p1-color)' : 'var(--p2-color)';
 
   document.getElementById('cmd-round-label').textContent = `Round ${state.round} of ${state.maxRounds}`;
   document.getElementById('cmd-player-label').textContent = `${p.name}'s Turn`;
@@ -2074,12 +2083,19 @@ function showCommandPhase() {
       </div>`;
   }).join('');
 
-  // If all orders used, hide the skip button label change
   const allUsed = p.usedOrders.length >= orderKeys.length;
-  document.querySelector('.command-skip .btn').textContent =
+  document.querySelector('#command-modal .command-skip .btn').textContent =
     allUsed ? 'Continue to Battle →' : 'Skip for now';
 
-  showScreen('command');
+  updateTurnLabel();
+  renderBattle();
+  if (currentScreen !== 'battle') {
+    showScreen('battle');
+  }
+
+  const modal = document.getElementById('command-modal');
+  modal.style.display = 'flex';
+  requestAnimationFrame(() => modal.classList.add('show'));
 }
 
 function selectOrder(key) {
@@ -2089,9 +2105,11 @@ function selectOrder(key) {
   if (key && !p.usedOrders.includes(key)) {
     p.usedOrders.push(key);
   }
+  const modal = document.getElementById('command-modal');
+  modal.classList.remove('show');
+  setTimeout(() => { modal.style.display = 'none'; }, 200);
   updateTurnLabel();
   renderBattle();
-  showScreen('battle');
 }
 
 // ============================
