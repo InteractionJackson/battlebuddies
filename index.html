@@ -511,6 +511,23 @@
     margin-top: 1px;
     font-weight: 500;
   }
+  .battle-rules-btn {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: white;
+    padding: 7px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.12s;
+  }
+  .battle-rules-btn:hover { background: rgba(255,255,255,0.22); }
+
   .battle-next-btn {
     background: rgba(255,255,255,0.15);
     border: 1px solid rgba(255,255,255,0.25);
@@ -934,6 +951,73 @@
   }
   .modal-actions .btn { flex: 1; }
 
+  /* Rulebook modal */
+  .rulebook-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,23,42,0.55);
+    z-index: 200;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .rulebook-overlay.show { display: flex; opacity: 1; }
+  .rulebook-sheet {
+    background: var(--bg);
+    border-radius: 16px 16px 0 0;
+    width: 100%;
+    max-width: 900px;
+    max-height: 88vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    transform: translateY(24px);
+    transition: transform 0.25s ease;
+    box-shadow: 0 -8px 32px rgba(0,0,0,0.15);
+  }
+  .rulebook-overlay.show .rulebook-sheet { transform: translateY(0); }
+  .rulebook-sheet-header {
+    position: sticky;
+    top: 0;
+    background: var(--navy);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 16px 16px 0 0;
+    z-index: 1;
+  }
+  .rulebook-sheet-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .rulebook-close-btn {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+    flex-shrink: 0;
+  }
+  .rulebook-close-btn:hover { background: rgba(255,255,255,0.25); }
+  .rulebook-body {
+    padding: 16px;
+    padding-bottom: 32px;
+  }
+  @media (min-width: 600px) {
+    .rulebook-body { padding: 20px 24px 36px; }
+  }
+
   /* Utility */
   .hidden { display: none !important; }
   .mt-2 { margin-top: 8px; }
@@ -1118,7 +1202,10 @@
           <div class="battle-mode-name" id="battle-mode-label">—</div>
           <div class="battle-turn" id="battle-turn-label">Turn 1 of 5</div>
         </div>
-        <button class="battle-next-btn" id="battle-next-btn" onclick="nextTurn()">Next Turn →</button>
+        <div style="display:flex;gap:6px;flex-shrink:0;align-items:center;">
+          <button class="battle-rules-btn" onclick="showRulebookModal()">📖 Rules</button>
+          <button class="battle-next-btn" id="battle-next-btn" onclick="nextTurn()">Next Turn →</button>
+        </div>
       </div>
     </div>
 
@@ -1147,6 +1234,125 @@
     </div>
   </div>
 
+</div>
+
+<!-- Rulebook Modal -->
+<div class="rulebook-overlay" id="rulebook-modal" onclick="rulebookOverlayClick(event)">
+  <div class="rulebook-sheet" id="rulebook-sheet">
+    <div class="rulebook-sheet-header">
+      <div class="rulebook-sheet-title">📖 Rule Book</div>
+      <button class="rulebook-close-btn" onclick="hideRulebookModal()">✕</button>
+    </div>
+    <div class="rulebook-body">
+
+      <p class="section-label" style="margin-bottom:10px;">Core Numbers</p>
+      <div class="core-numbers" style="margin-bottom:20px;">
+        <div class="core-number-card">
+          <div class="num">6"</div>
+          <div class="label">Move Distance</div>
+        </div>
+        <div class="core-number-card">
+          <div class="num">8"</div>
+          <div class="label">Shoot Range</div>
+        </div>
+        <div class="core-number-card">
+          <div class="num">4+</div>
+          <div class="label">All Rolls</div>
+        </div>
+      </div>
+
+      <p class="section-label" style="margin-bottom:10px;">The Four Phases</p>
+      <div class="phase-list" id="rb-phase-list">
+
+        <div class="phase-card" id="rb-phase-move">
+          <div class="phase-header" onclick="toggleRbPhase('move')">
+            <div class="phase-icon move">🦶</div>
+            <div>
+              <div class="phase-title">Movement</div>
+              <div class="phase-subtitle">Move up to 6 inches</div>
+            </div>
+            <span class="phase-chevron">▼</span>
+          </div>
+          <div class="phase-body" id="rb-phase-body-move">
+            <div class="phase-body-inner">
+              <p>Each of your models can move up to <strong>6 inches</strong> in any direction.</p>
+              <p>You can move each model independently. Models cannot move through other models or off the table.</p>
+              <p>Tip: Move your models towards enemies or objectives, but think about where they'll be when shooting starts!</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase-card" id="rb-phase-shoot">
+          <div class="phase-header" onclick="toggleRbPhase('shoot')">
+            <div class="phase-icon shoot">🎯</div>
+            <div>
+              <div class="phase-title">Shooting</div>
+              <div class="phase-subtitle">Attack at range, up to 8"</div>
+            </div>
+            <span class="phase-chevron">▼</span>
+          </div>
+          <div class="phase-body" id="rb-phase-body-shoot">
+            <div class="phase-body-inner">
+              <p>Pick a model and a target enemy within <strong>8 inches</strong>. Roll three dice:</p>
+              <div class="roll-sequence">
+                <div class="roll-step">Hit 4+</div>
+                <div class="roll-arrow">→</div>
+                <div class="roll-step">Wound 4+</div>
+                <div class="roll-arrow">→</div>
+                <div class="roll-step">Save 4+</div>
+              </div>
+              <p class="mt-3"><strong>Hit:</strong> Roll a die — score 4 or more to hit.</p>
+              <p><strong>Wound:</strong> If you hit, roll again — score 4 or more to wound.</p>
+              <p><strong>Save:</strong> The defender rolls — 4 or more means the armour holds. Below 4? Remove that model!</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase-card" id="rb-phase-charge">
+          <div class="phase-header" onclick="toggleRbPhase('charge')">
+            <div class="phase-icon charge">💨</div>
+            <div>
+              <div class="phase-title">Charge</div>
+              <div class="phase-subtitle">Rush into close combat</div>
+            </div>
+            <span class="phase-chevron">▼</span>
+          </div>
+          <div class="phase-body" id="rb-phase-body-charge">
+            <div class="phase-body-inner">
+              <p>Choose a model to charge at an enemy within <strong>12 inches</strong>. Roll 2 dice and add them together — if the total reaches the enemy, the charge succeeds!</p>
+              <p>If the total isn't enough, the charge fails and the model stays put.</p>
+              <p>Tip: Charging is exciting but risky — only charge if you really want to get stuck in!</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase-card" id="rb-phase-fight">
+          <div class="phase-header" onclick="toggleRbPhase('fight')">
+            <div class="phase-icon fight">👊</div>
+            <div>
+              <div class="phase-title">Fight</div>
+              <div class="phase-subtitle">Swing at close range</div>
+            </div>
+            <span class="phase-chevron">▼</span>
+          </div>
+          <div class="phase-body" id="rb-phase-body-fight">
+            <div class="phase-body-inner">
+              <p>Models next to an enemy can fight! The same three rolls apply:</p>
+              <div class="roll-sequence">
+                <div class="roll-step">Hit 4+</div>
+                <div class="roll-arrow">→</div>
+                <div class="roll-step">Wound 4+</div>
+                <div class="roll-arrow">→</div>
+                <div class="roll-step">Save 4+</div>
+              </div>
+              <p class="mt-3"><strong>Both players fight</strong> — the attacker goes first, then the defender strikes back. Even if a model is killed, it still gets to fight before it's removed.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Tiebreak Modal -->
@@ -1747,6 +1953,44 @@ function playAgain() {
 document.querySelectorAll('.phase-body').forEach(b => {
   b.style.maxHeight = '0';
 });
+
+// ============================
+// RULEBOOK MODAL
+// ============================
+function showRulebookModal() {
+  const modal = document.getElementById('rulebook-modal');
+  modal.style.display = 'flex';
+  // Reset all rulebook phase cards closed each time
+  document.querySelectorAll('#rb-phase-list .phase-body').forEach(b => {
+    b.style.maxHeight = '0';
+  });
+  document.querySelectorAll('#rb-phase-list .phase-card').forEach(c => {
+    c.classList.remove('open');
+  });
+  requestAnimationFrame(() => modal.classList.add('show'));
+}
+
+function hideRulebookModal() {
+  const modal = document.getElementById('rulebook-modal');
+  modal.classList.remove('show');
+  setTimeout(() => { modal.style.display = 'none'; }, 250);
+}
+
+function rulebookOverlayClick(e) {
+  if (e.target === document.getElementById('rulebook-modal')) hideRulebookModal();
+}
+
+function toggleRbPhase(id) {
+  const card = document.getElementById('rb-phase-' + id);
+  const body = document.getElementById('rb-phase-body-' + id);
+  const isOpen = card.classList.contains('open');
+  document.querySelectorAll('#rb-phase-list .phase-card').forEach(c => c.classList.remove('open'));
+  document.querySelectorAll('#rb-phase-list .phase-body').forEach(b => { b.style.maxHeight = '0'; });
+  if (!isOpen) {
+    card.classList.add('open');
+    body.style.maxHeight = body.scrollHeight + 'px';
+  }
+}
 </script>
 </body>
 </html>
