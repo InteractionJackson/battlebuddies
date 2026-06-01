@@ -791,7 +791,8 @@
     padding-top: 4px;
   }
 
-  .modal-box.command-modal-box {
+  .modal-box.command-modal-box,
+  .modal-box.battleshock-modal-box {
     max-width: 900px;
     padding: 0;
     overflow: hidden;
@@ -1716,52 +1717,6 @@
     </div>
   </div>
 
-  <!-- ==================== SCREEN 2b: BATTLESHOCK CHECK ==================== -->
-  <div id="screen-battleshock" class="screen">
-    <div class="bshock-header">
-      <div class="bshock-phase-tag">⚡ Battleshock Check</div>
-      <div class="bshock-round-line" id="bshock-round-label">Round 1 of 5</div>
-      <div class="bshock-player-line" id="bshock-player-label">Player 1's Turn</div>
-    </div>
-    <div class="bshock-content">
-
-      <!-- Step 1: Yes / No -->
-      <div id="bshock-step1">
-        <div class="bshock-question-card">
-          <div class="bshock-q-icon">💀</div>
-          <div class="bshock-q-text">Did you lose any models last turn?</div>
-        </div>
-        <div class="bshock-choices">
-          <button class="btn btn-outline btn-block btn-lg" onclick="battleshockNo()">All good, no losses</button>
-          <button class="btn btn-navy btn-block btn-lg" onclick="battleshockYes()">Yes, we lost some</button>
-        </div>
-      </div>
-
-      <!-- Step 2: Roll the die -->
-      <div id="bshock-step2" style="display:none;">
-        <div class="bshock-roll-card">
-          <div class="bshock-roll-icon">🎲</div>
-          <div class="bshock-roll-title">Roll one die</div>
-          <div class="bshock-result-row">
-            <div class="bshock-result-item bshock-result-good">
-              <span class="bshock-result-die">3–6</span>
-              <span class="bshock-result-label">Hold their nerve</span>
-            </div>
-            <div class="bshock-result-item bshock-result-bad">
-              <span class="bshock-result-die">1–2</span>
-              <span class="bshock-result-label">Shaken — move 3" only</span>
-            </div>
-          </div>
-        </div>
-        <div class="bshock-choices">
-          <button class="btn btn-outline btn-block btn-lg" onclick="battleshockHeld()">They held firm</button>
-          <button class="btn btn-navy btn-block btn-lg" onclick="battleshockBroke()">They broke</button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
   <!-- ==================== SCREEN 3: BATTLE ==================== -->
   <div id="screen-battle" class="screen">
     <div class="battle-header">
@@ -1942,6 +1897,54 @@
         </div>
 
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Battleshock Modal -->
+<div class="modal-overlay" id="battleshock-modal">
+  <div class="modal-box battleshock-modal-box">
+    <div class="bshock-header">
+      <div class="bshock-phase-tag">⚡ Battleshock Check</div>
+      <div class="bshock-round-line" id="bshock-round-label">Round 1 of 5</div>
+      <div class="bshock-player-line" id="bshock-player-label">Player 1's Turn</div>
+    </div>
+    <div class="bshock-content">
+
+      <!-- Step 1: Yes / No -->
+      <div id="bshock-step1">
+        <div class="bshock-question-card">
+          <div class="bshock-q-icon">💀</div>
+          <div class="bshock-q-text">Did you lose any models last turn?</div>
+        </div>
+        <div class="bshock-choices">
+          <button class="btn btn-outline btn-block btn-lg" onclick="battleshockNo()">All good, no losses</button>
+          <button class="btn btn-navy btn-block btn-lg" onclick="battleshockYes()">Yes, we lost some</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Roll the die -->
+      <div id="bshock-step2" style="display:none;">
+        <div class="bshock-roll-card">
+          <div class="bshock-roll-icon">🎲</div>
+          <div class="bshock-roll-title">Roll one die</div>
+          <div class="bshock-result-row">
+            <div class="bshock-result-item bshock-result-good">
+              <span class="bshock-result-die">3–6</span>
+              <span class="bshock-result-label">Hold their nerve</span>
+            </div>
+            <div class="bshock-result-item bshock-result-bad">
+              <span class="bshock-result-die">1–2</span>
+              <span class="bshock-result-label">Shaken — move 3" only</span>
+            </div>
+          </div>
+        </div>
+        <div class="bshock-choices">
+          <button class="btn btn-outline btn-block btn-lg" onclick="battleshockHeld()">They held firm</button>
+          <button class="btn btn-navy btn-block btn-lg" onclick="battleshockBroke()">They broke</button>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -2139,11 +2142,19 @@ function showBattleshockCheck() {
   document.getElementById('bshock-player-label').textContent = `${p.name}'s Turn`;
   document.getElementById('bshock-step1').style.display = '';
   document.getElementById('bshock-step2').style.display = 'none';
-  showScreen('battleshock');
+  const modal = document.getElementById('battleshock-modal');
+  modal.style.display = 'flex';
+  requestAnimationFrame(() => modal.classList.add('show'));
+}
+
+function closeBattleshockModal(callback) {
+  const modal = document.getElementById('battleshock-modal');
+  modal.classList.remove('show');
+  setTimeout(() => { modal.style.display = 'none'; if (callback) callback(); }, 200);
 }
 
 function battleshockNo() {
-  showCommandPhase();
+  closeBattleshockModal(() => showCommandPhase());
 }
 
 function battleshockYes() {
@@ -2153,13 +2164,13 @@ function battleshockYes() {
 
 function battleshockHeld() {
   logEvent('battleshock_held', { round: state.round, player: state.players[state.activePlayer].name });
-  showCommandPhase();
+  closeBattleshockModal(() => showCommandPhase());
 }
 
 function battleshockBroke() {
   logEvent('battleshock_broke', { round: state.round, player: state.players[state.activePlayer].name });
   state.players[state.activePlayer].shaken = true;
-  showCommandPhase();
+  closeBattleshockModal(() => showCommandPhase());
 }
 
 // ============================
