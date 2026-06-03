@@ -1721,7 +1721,7 @@
   <div id="screen-battle" class="screen">
     <div class="battle-header">
       <div class="battle-header-top">
-        <button class="battle-header-back" onclick="showScreen('modes')">←</button>
+        <button class="battle-header-back" onclick="attemptExitBattle()">←</button>
         <div class="battle-header-center">
           <div class="battle-mode-name" id="battle-mode-label">—</div>
           <div class="battle-turn" id="battle-turn-label">Turn 1 of 5</div>
@@ -1968,6 +1968,18 @@
   </div>
 </div>
 
+<!-- Abandon Battle Modal -->
+<div class="modal-overlay" id="abandon-modal">
+  <div class="modal-box">
+    <div class="modal-title">Abandon battle?</div>
+    <div class="modal-body">You'll lose all progress in your current battle. This can't be undone.</div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="confirmAbandonBattle()">Yes, abandon</button>
+      <button class="btn btn-navy" onclick="hideAbandonModal()">Keep fighting</button>
+    </div>
+  </div>
+</div>
+
 <!-- Tiebreak Modal -->
 <div class="modal-overlay" id="tiebreak-modal">
   <div class="modal-box">
@@ -2012,7 +2024,8 @@ const state = {
     { name: 'Objective 2', holder: 'contested' },
     { name: 'Objective 3', holder: 'contested' }
   ],
-  battleLog: []
+  battleLog: [],
+  battleActive: false
 };
 
 const MODE_META = {
@@ -2239,7 +2252,9 @@ function selectOrder(key) {
 function startBattle() {
   const mode = state.mode;
   state.battleLog = [];
+  state.battleActive = true;
   resetBattleReport();
+  history.pushState(null, '');
   state.round = 1;
   state.activePlayer = 0;
   state.players[0].kills = 0;
@@ -2629,6 +2644,7 @@ function endGame() {
 }
 
 function showResult() {
+  state.battleActive = false;
   resetBattleReport();
   const mode = state.mode;
   const p0 = state.players[0];
@@ -2712,6 +2728,48 @@ function showResult() {
 
   showScreen('result');
 }
+
+// ============================
+// ABANDON BATTLE
+// ============================
+function attemptExitBattle() {
+  if (state.battleActive) {
+    showAbandonModal();
+  } else {
+    showScreen('modes');
+  }
+}
+
+function showAbandonModal() {
+  const modal = document.getElementById('abandon-modal');
+  modal.style.display = 'flex';
+  requestAnimationFrame(() => modal.classList.add('show'));
+}
+
+function hideAbandonModal() {
+  const modal = document.getElementById('abandon-modal');
+  modal.classList.remove('show');
+  setTimeout(() => { modal.style.display = 'none'; }, 200);
+}
+
+function confirmAbandonBattle() {
+  state.battleActive = false;
+  // Instantly close any open sub-modals so the battle screen is clean
+  ['battleshock-modal', 'command-modal'].forEach(id => {
+    const m = document.getElementById(id);
+    if (m) { m.classList.remove('show'); m.style.display = 'none'; }
+  });
+  const modal = document.getElementById('abandon-modal');
+  modal.classList.remove('show');
+  setTimeout(() => { modal.style.display = 'none'; showScreen('modes'); }, 200);
+}
+
+window.addEventListener('popstate', function() {
+  if (state.battleActive) {
+    history.pushState(null, '');
+    showAbandonModal();
+  }
+});
 
 // ============================
 // TIEBREAK MODAL
