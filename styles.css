@@ -160,25 +160,21 @@ html, body {
   border-radius: var(--radius-lg);
 }
 .btn-icon {
-  width: 36px; height: 36px;
+  width: 40px; height: 40px;
   padding: 0;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   font-size: var(--text-xl);
-  font-weight: var(--font-weight-bold);
-  background: var(--color-text-inverse);
-  color: var(--color-text-primary);
-  border: 1px solid var(--color-border);
+  font-weight: var(--font-weight-semibold);
+  background: var(--color-subheader);
+  color: var(--color-text-secondary);
+  border: var(--border-default);
   flex-shrink: 0;
 }
-.btn-icon:hover { background: var(--color-subheader); }
-.btn-icon.btn-icon-primary {
-  background: var(--color-header);
-  color: var(--color-text-inverse);
-  border-color: var(--color-header);
-}
+.btn-icon:hover { background: var(--color-border); }
+.btn-icon.btn-icon-primary,
 .btn-icon.btn-icon-danger {
-  background: var(--color-text-inverse);
-  color: var(--color-text-primary);
+  background: var(--color-subheader);
+  color: var(--color-text-secondary);
   border-color: var(--color-border);
 }
 
@@ -310,13 +306,17 @@ html, body {
   -webkit-tap-highlight-color: transparent;
 }
 .phase-icon {
-  width: 36px; height: 36px;
-  border-radius: var(--radius-sm);
+  width: 40px; height: 40px;
+  border-radius: var(--radius-full);
   display: flex; align-items: center; justify-content: center;
   font-size: var(--text-lg);
   flex-shrink: 0;
   background: var(--color-subheader);
 }
+.phase-icon.move { background: #DBEAFE; }
+.phase-icon.shoot { background: #FFE8CC; }
+.phase-icon.charge { background: #F3E8FF; }
+.phase-icon.fight { background: #FFE0EC; }
 .phase-title {
   flex: 1;
   font-size: var(--text-md);
@@ -702,29 +702,31 @@ html, body {
 
 /* ===================== SCREEN 2c — COMMAND PHASE ===================== */
 .command-header {
-  background: var(--color-header);
-  padding: var(--space-8) var(--space-5) var(--space-6);
-  text-align: center;
+  background: var(--color-subheader);
+  padding: var(--space-5) var(--space-5);
+  text-align: left;
 }
 .command-round-line {
+  display: inline;
   font-size: var(--text-sm);
-  font-weight: var(--font-weight-bold);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.55);
-  margin-bottom: var(--space-2);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+}
+.command-round-line::after {
+  content: ' • ';
 }
 .command-player-line {
-  font-size: var(--text-2xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-inverse);
-  letter-spacing: -0.5px;
-  margin-bottom: var(--space-2);
+  display: inline;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
 }
 .command-subtitle {
-  font-size: var(--text-md);
-  color: rgba(255,255,255,0.65);
-  font-weight: var(--font-weight-medium);
+  display: block;
+  margin-top: var(--space-1);
+  font-size: var(--text-xl);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-bold);
 }
 
 .command-content {
@@ -770,11 +772,15 @@ html, body {
   height: 46px;
   flex-shrink: 0;
   background: var(--color-subheader);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
 }
+.order-card:nth-child(1) .order-card-icon { background: #FFE8CC; }
+.order-card:nth-child(2) .order-card-icon { background: #E0E7FF; }
+.order-card:nth-child(3) .order-card-icon { background: #FFE0EC; }
+.order-card:nth-child(4) .order-card-icon { background: #FCE4EC; }
 .order-card-info { flex: 1; }
 .order-card-name {
   font-size: var(--text-md);
@@ -804,6 +810,18 @@ html, body {
 
 .command-skip {
   padding-top: var(--space-1);
+}
+.command-skip .btn {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.command-skip .btn:hover {
+  color: var(--color-text-primary);
 }
 
 .modal-box.command-modal-box,
@@ -847,9 +865,9 @@ html, body {
 /* Order reminder banner in battle */
 .order-reminder {
   background: var(--color-banner-bg);
-  border: var(--border-default);
-  border-radius: var(--radius-md);
-  padding: var(--space-2) var(--space-4);
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -974,14 +992,20 @@ html, body {
 .player-panel {
   background: var(--color-card);
   border-radius: var(--radius-lg);
-  border: var(--border-default);
+  border: 2px solid transparent;
   overflow: hidden;
 }
 .player-panel.active-turn {
+  background: var(--color-text-inverse);
   border: var(--border-active);
 }
 .player-panel:not(.active-turn) {
-  opacity: 0.7;
+  background: var(--color-card);
+}
+.player-panel:not(.active-turn) .player-name-display,
+.player-panel:not(.active-turn) .score-value,
+.player-panel:not(.active-turn) .score-label {
+  color: var(--color-text-muted);
 }
 .player-panel-header {
   padding: var(--space-3) var(--space-3) var(--space-2);
@@ -1170,13 +1194,13 @@ html, body {
 }
 .turn-track-dots {
   display: flex;
-  gap: var(--space-2);
+  gap: var(--space-3);
   align-items: center;
 }
 .turn-dot {
   flex: 1;
-  height: 6px;
-  border-radius: 3px;
+  height: 8px;
+  border-radius: var(--radius-full);
   background: var(--color-border);
   transition: background 0.2s;
 }
@@ -1227,7 +1251,7 @@ body.wt-flip-modals .rulebook-overlay { transform: rotate(180deg); }
   display: flex;
   gap: var(--space-2);
 }
-.wt-progress-dots .turn-dot { flex: 1; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.18); }
+.wt-progress-dots .turn-dot { flex: 1; height: 8px; border-radius: var(--radius-full); background: rgba(255,255,255,0.18); }
 .wt-progress-dots .turn-dot.done { background: var(--color-text-inverse); }
 .wt-progress-dots .turn-dot.current { background: var(--color-text-inverse); }
 
