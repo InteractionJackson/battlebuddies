@@ -1194,6 +1194,9 @@
   }
   .wt-half.wt-rotated { transform: rotate(180deg); }
 
+  body.wt-flip-modals .modal-overlay,
+  body.wt-flip-modals .rulebook-overlay { transform: rotate(180deg); }
+
   .wt-progress {
     display: flex;
     align-items: center;
@@ -1342,6 +1345,12 @@
     transition: background 0.12s;
   }
   .wt-band-btn:hover { background: rgba(255,255,255,0.18); }
+  .wt-band-btn-exit {
+    background: rgba(239,68,68,0.16);
+    border-color: rgba(239,68,68,0.4);
+    color: #fecaca;
+  }
+  .wt-band-btn-exit:hover { background: rgba(239,68,68,0.28); }
   .wt-band-dots {
     display: flex;
     justify-content: center;
@@ -2360,6 +2369,7 @@ function showSetup(mode) {
 function showBattleshockCheck() {
   const ap = state.activePlayer;
   const p = state.players[ap];
+  updateWTModalOrientation();
   document.getElementById('bshock-round-label').textContent = `Round ${state.round} of ${state.maxRounds}`;
   document.getElementById('bshock-player-label').textContent = `${p.name}'s Turn`;
   document.getElementById('bshock-step1').style.display = '';
@@ -2401,6 +2411,7 @@ function battleshockBroke() {
 function showCommandPhase() {
   const ap = state.activePlayer;
   const p = state.players[ap];
+  updateWTModalOrientation();
 
   document.getElementById('cmd-round-label').textContent = `Round ${state.round} of ${state.maxRounds}`;
   document.getElementById('cmd-player-label').textContent = `${p.name}'s Turn`;
@@ -2696,6 +2707,7 @@ function escHtml(str) {
 // WAR TABLE
 // ============================
 let wtBandState = 0; // 0 = objectives panel, 1 = exit/rules panel
+let wtSwipeStartX = null;
 
 function enterWarTable() {
   state.viewMode = 'wartable';
@@ -2707,6 +2719,7 @@ function enterWarTable() {
 function exitWarTable() {
   state.viewMode = 'basic';
   document.getElementById('war-table').classList.remove('show');
+  document.body.classList.remove('wt-flip-modals');
 }
 
 function setWTBandState(i) {
@@ -2714,14 +2727,34 @@ function setWTBandState(i) {
   renderWarTable();
 }
 
+function wtBandTouchStart(e) {
+  if (state.mode === 'los') return;
+  wtSwipeStartX = e.touches[0].clientX;
+}
+
+function wtBandTouchEnd(e) {
+  if (wtSwipeStartX === null || state.mode === 'los') { wtSwipeStartX = null; return; }
+  const dx = e.changedTouches[0].clientX - wtSwipeStartX;
+  wtSwipeStartX = null;
+  if (Math.abs(dx) < 40) return;
+  setWTBandState(dx < 0 ? 1 : 0);
+}
+
+// Modals should face whichever player is currently active in War Table mode
+function updateWTModalOrientation() {
+  const flip = state.viewMode === 'wartable' && state.activePlayer === 1;
+  document.body.classList.toggle('wt-flip-modals', flip);
+}
+
 function renderWarTable() {
   const el = document.getElementById('war-table');
   if (!el) return;
   el.innerHTML = `
     <div class="wt-half wt-rotated">${renderWTHalf(1)}</div>
-    <div class="wt-band">${renderWTBand()}</div>
+    <div class="wt-band" ontouchstart="wtBandTouchStart(event)" ontouchend="wtBandTouchEnd(event)">${renderWTBand()}</div>
     <div class="wt-half">${renderWTHalf(0)}</div>
   `;
+  updateWTModalOrientation();
 }
 
 function renderWTProgress() {
@@ -2829,17 +2862,18 @@ function renderWTBandDots() {
     </div>`;
 }
 
-function renderWTExitActions() {
+function renderWTBandActions() {
   return `
     <div class="wt-band-actions">
-      <button class="wt-band-btn" onclick="exitWarTable()">↩️ Exit</button>
+      <button class="wt-band-btn" onclick="exitWarTable()">↩️ Basic</button>
       <button class="wt-band-btn" onclick="showRulebookModal()">📖 Rules</button>
+      <button class="wt-band-btn wt-band-btn-exit" onclick="attemptExitBattle()">✕ Exit</button>
     </div>`;
 }
 
 function renderWTBand() {
   if (state.mode === 'los') {
-    return `<div class="wt-band-slim">${renderWTExitActions()}</div>`;
+    return `<div class="wt-band-slim">${renderWTBandActions()}</div>`;
   }
   if (wtBandState === 0) {
     return `
@@ -2847,7 +2881,7 @@ function renderWTBand() {
       ${renderWTBandDots()}`;
   }
   return `
-    ${renderWTExitActions()}
+    ${renderWTBandActions()}
     ${renderWTBandDots()}`;
 }
 
