@@ -912,6 +912,21 @@
   }
   .battle-rules-btn:hover { background: rgba(255,255,255,0.22); }
 
+  .battle-wartable-btn {
+    width: 30px; height: 30px;
+    border-radius: var(--radius-sm);
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    flex-shrink: 0;
+    font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.12s;
+  }
+  .battle-wartable-btn:hover { background: rgba(255,255,255,0.22); }
+
   .battle-next-btn {
     background: rgba(255,255,255,0.15);
     border: 1px solid rgba(255,255,255,0.25);
@@ -1155,6 +1170,192 @@
   }
   .turn-dot.done { background: var(--success); }
   .turn-dot.current { background: var(--blue-accent); }
+
+  /* ===================== WAR TABLE ===================== */
+  .war-table {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 150;
+    background: var(--navy-dark);
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .war-table.show { display: flex; }
+
+  .wt-half {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 16px 20px;
+    min-height: 240px;
+  }
+  .wt-half.wt-rotated { transform: rotate(180deg); }
+
+  .wt-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .wt-progress-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    white-space: nowrap;
+  }
+  .wt-progress-dots {
+    flex: 1;
+    display: flex;
+    gap: 6px;
+  }
+  .wt-progress-dots .turn-dot { flex: 1; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.18); }
+  .wt-progress-dots .turn-dot.done { background: var(--success); }
+  .wt-progress-dots .turn-dot.current { background: var(--blue-accent); }
+
+  .wt-banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: var(--radius-md);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .wt-banner-icon { font-size: 16px; flex-shrink: 0; }
+  .wt-banner.wt-order { background: rgba(199,210,254,0.18); color: #e0e7ff; }
+  .wt-banner.wt-shaken { background: rgba(245,158,11,0.18); color: #fde68a; }
+  .wt-banner strong { font-weight: 700; }
+
+  .wt-card {
+    background: rgba(255,255,255,0.06);
+    border: 2px solid transparent;
+    border-radius: var(--radius-lg);
+    padding: 14px 16px;
+    text-align: center;
+  }
+  .wt-card.p1 { border-color: var(--p1-color); }
+  .wt-card.p2 { border-color: var(--p2-color); }
+  .wt-card-name { font-size: 16px; font-weight: 800; color: white; margin-bottom: 6px; }
+  .wt-card-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 4px;
+  }
+  .wt-score-value { font-size: 38px; font-weight: 800; line-height: 1; color: white; }
+  .wt-kill-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .wt-opponent-stat {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+  }
+  .wt-opponent-stat strong { color: rgba(255,255,255,0.85); }
+
+  .wt-complete-btn {
+    background: var(--success);
+    border: none;
+    color: white;
+    padding: 14px 20px;
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.12s;
+  }
+  .wt-complete-btn:hover { background: #0ea271; }
+  .wt-waiting {
+    text-align: center;
+    padding: 14px 20px;
+    border-radius: var(--radius-md);
+    border: 1.5px dashed rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.45);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .wt-band {
+    flex-shrink: 0;
+    background: var(--navy);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .wt-band-objectives {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .wt-obj-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .wt-obj-name {
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+    flex: 0 0 84px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .wt-obj-row .objective-toggle { flex: 1; }
+  .wt-band-slim {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .wt-band-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+  .wt-band-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.22);
+    color: white;
+    padding: 9px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.12s;
+  }
+  .wt-band-btn:hover { background: rgba(255,255,255,0.18); }
+  .wt-band-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+  }
+  .wt-band-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .wt-band-dot.active { background: var(--blue-accent); }
 
   /* ===================== RESULT SCREEN ===================== */
   #screen-result {
@@ -1727,6 +1928,7 @@
           <div class="battle-turn" id="battle-turn-label">Turn 1 of 5</div>
         </div>
         <div style="display:flex;gap:6px;flex-shrink:0;align-items:center;">
+          <button class="battle-wartable-btn" onclick="enterWarTable()" title="War Table">🗺️</button>
           <button class="battle-rules-btn" onclick="showRulebookModal()">📖 Rules</button>
           <button class="battle-next-btn" id="battle-next-btn" onclick="nextTurn()">Next Turn →</button>
         </div>
@@ -2001,12 +2203,18 @@
   </div>
 </div>
 
+<!-- War Table View -->
+<div class="war-table" id="war-table">
+  <!-- Dynamically rendered by JS -->
+</div>
+
 <script>
 // ============================
 // STATE
 // ============================
 const state = {
   mode: null,          // 'los' | 'htl' | 'siege'
+  viewMode: 'basic',   // 'basic' | 'wartable'
   round: 1,
   activePlayer: 0,     // 0 or 1
   maxRounds: 5,
@@ -2047,6 +2255,7 @@ const ORDERS = {
 let currentScreen = 'rules';
 
 function showScreen(id) {
+  if (state.viewMode === 'wartable' && id !== 'battle') exitWarTable();
   const screens = document.querySelectorAll('.screen');
   screens.forEach(s => {
     if (s.id === 'screen-' + currentScreen) {
@@ -2253,6 +2462,9 @@ function startBattle() {
   const mode = state.mode;
   state.battleLog = [];
   state.battleActive = true;
+  state.viewMode = 'basic';
+  document.getElementById('war-table').classList.remove('show');
+  wtBandState = 0;
   resetBattleReport();
   history.pushState(null, '');
   state.round = 1;
@@ -2293,6 +2505,8 @@ function renderBattle() {
 
   renderTurnTrack();
   attachNameEditing();
+
+  if (state.viewMode === 'wartable') renderWarTable();
 }
 
 function renderTurnTrack() {
@@ -2479,6 +2693,165 @@ function escHtml(str) {
 }
 
 // ============================
+// WAR TABLE
+// ============================
+let wtBandState = 0; // 0 = objectives panel, 1 = exit/rules panel
+
+function enterWarTable() {
+  state.viewMode = 'wartable';
+  wtBandState = 0;
+  renderWarTable();
+  document.getElementById('war-table').classList.add('show');
+}
+
+function exitWarTable() {
+  state.viewMode = 'basic';
+  document.getElementById('war-table').classList.remove('show');
+}
+
+function setWTBandState(i) {
+  wtBandState = i;
+  renderWarTable();
+}
+
+function renderWarTable() {
+  const el = document.getElementById('war-table');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="wt-half wt-rotated">${renderWTHalf(1)}</div>
+    <div class="wt-band">${renderWTBand()}</div>
+    <div class="wt-half">${renderWTHalf(0)}</div>
+  `;
+}
+
+function renderWTProgress() {
+  let dots = '';
+  for (let i = 1; i <= state.maxRounds; i++) {
+    let cls = i < state.round ? 'done' : i === state.round ? 'current' : '';
+    dots += `<div class="turn-dot ${cls}"></div>`;
+  }
+  return `<div class="wt-progress"><div class="wt-progress-label">Round ${state.round} of ${state.maxRounds}</div><div class="wt-progress-dots">${dots}</div></div>`;
+}
+
+function renderWTBanner(idx) {
+  const p = state.players[idx];
+  if (state.activePlayer !== idx) return '';
+  let html = '';
+  if (p.shaken) {
+    html += `<div class="wt-banner wt-shaken"><span class="wt-banner-icon">⚠️</span><span>Shaken — Move up to 3" this turn only</span></div>`;
+  }
+  if (p.activeOrder) {
+    const o = ORDERS[p.activeOrder];
+    html += `<div class="wt-banner wt-order"><span class="wt-banner-icon">${o.icon}</span><span><strong>${o.name}:</strong> ${o.effect}</span></div>`;
+  }
+  return html;
+}
+
+function renderWTCard(idx) {
+  const p = state.players[idx];
+  const opp = state.players[idx === 0 ? 1 : 0];
+  const cls = idx === 0 ? 'p1' : 'p2';
+
+  let body = '';
+  if (state.mode === 'los') {
+    body = `
+      <div class="wt-card-label">⚔️ Kills</div>
+      <div class="wt-kill-controls">
+        <button class="btn btn-icon btn-icon-danger" onclick="adjustKills(${idx}, -1)">−</button>
+        <div class="wt-score-value">${p.kills}</div>
+        <button class="btn btn-icon btn-icon-primary" onclick="adjustKills(${idx}, 1)">+</button>
+      </div>
+      <div class="wt-opponent-stat">${escHtml(opp.name)}: <strong>${opp.kills}</strong> kills</div>`;
+  } else if (state.mode === 'htl') {
+    body = `
+      <div class="wt-card-label">🚩 Points</div>
+      <div class="wt-score-value">${p.score}</div>`;
+  } else if (state.mode === 'siege') {
+    const role = idx === 0 ? 'Attacker' : 'Defender';
+    const icon = idx === 0 ? '⚔️' : '🛡️';
+    body = `<div class="wt-card-label">${icon} ${role}</div>`;
+  }
+
+  return `
+    <div class="wt-card ${cls}">
+      <div class="wt-card-name">${escHtml(p.name)}</div>
+      ${body}
+    </div>`;
+}
+
+function renderWTTurnControl(idx) {
+  if (state.activePlayer === idx) {
+    return `<button class="wt-complete-btn" onclick="nextTurn()">Complete turn ✓</button>`;
+  }
+  const opp = state.players[idx === 0 ? 1 : 0];
+  return `<div class="wt-waiting">Waiting for ${escHtml(opp.name)}</div>`;
+}
+
+function renderWTHalf(idx) {
+  return `
+    ${renderWTProgress()}
+    ${renderWTBanner(idx)}
+    ${renderWTCard(idx)}
+    ${renderWTTurnControl(idx)}
+  `;
+}
+
+function renderWTObjectives() {
+  const p0 = state.players[0];
+  const p1 = state.players[1];
+  if (state.mode === 'htl') {
+    return state.objectives.map((obj, i) => `
+      <div class="wt-obj-row">
+        <div class="wt-obj-name">${escHtml(obj.name)} <span class="obj-pts-badge">${obj.pts === 2 ? '2 pts' : '1 pt'}</span></div>
+        <div class="objective-toggle">
+          <button class="toggle-btn ${obj.holder === 'p1' ? 'active-p1' : ''}" onclick="setObjHolder('htl', ${i}, 'p1')">${escHtml(p0.name)}</button>
+          <button class="toggle-btn ${obj.holder === 'contested' ? 'active-contested' : ''}" onclick="setObjHolder('htl', ${i}, 'contested')">Contested</button>
+          <button class="toggle-btn ${obj.holder === 'p2' ? 'active-p2' : ''}" onclick="setObjHolder('htl', ${i}, 'p2')">${escHtml(p1.name)}</button>
+        </div>
+      </div>`).join('');
+  }
+  return state.siegeObjectives.map((obj, i) => `
+    <div class="wt-obj-row">
+      <div class="wt-obj-name">${escHtml(obj.name)}</div>
+      <div class="objective-toggle">
+        <button class="toggle-btn ${obj.holder === 'attacker' ? 'active-attacker' : ''}" onclick="setObjHolder('siege', ${i}, 'attacker')">⚔️ ${escHtml(p0.name)}</button>
+        <button class="toggle-btn ${obj.holder === 'contested' ? 'active-contested' : ''}" onclick="setObjHolder('siege', ${i}, 'contested')">Contested</button>
+        <button class="toggle-btn ${obj.holder === 'defender' ? 'active-defender' : ''}" onclick="setObjHolder('siege', ${i}, 'defender')">🛡️ ${escHtml(p1.name)}</button>
+      </div>
+    </div>`).join('');
+}
+
+function renderWTBandDots() {
+  return `
+    <div class="wt-band-dots">
+      <div class="wt-band-dot ${wtBandState === 0 ? 'active' : ''}" onclick="setWTBandState(0)"></div>
+      <div class="wt-band-dot ${wtBandState === 1 ? 'active' : ''}" onclick="setWTBandState(1)"></div>
+    </div>`;
+}
+
+function renderWTExitActions() {
+  return `
+    <div class="wt-band-actions">
+      <button class="wt-band-btn" onclick="exitWarTable()">↩️ Exit</button>
+      <button class="wt-band-btn" onclick="showRulebookModal()">📖 Rules</button>
+    </div>`;
+}
+
+function renderWTBand() {
+  if (state.mode === 'los') {
+    return `<div class="wt-band-slim">${renderWTExitActions()}</div>`;
+  }
+  if (wtBandState === 0) {
+    return `
+      <div class="wt-band-objectives">${renderWTObjectives()}</div>
+      ${renderWTBandDots()}`;
+  }
+  return `
+    ${renderWTExitActions()}
+    ${renderWTBandDots()}`;
+}
+
+// ============================
 // NAME EDITING
 // ============================
 function attachNameEditing() {
@@ -2555,6 +2928,7 @@ function adjustKills(idx, delta) {
   state.players[idx].kills = Math.max(0, state.players[idx].kills + delta);
   const scoreEl = document.querySelector(`.player-panel.${idx === 0 ? 'p1' : 'p2'} .score-value`);
   if (scoreEl) scoreEl.textContent = state.players[idx].kills;
+  if (state.viewMode === 'wartable') renderWarTable();
 }
 
 // ============================
@@ -2577,6 +2951,7 @@ function setObjHolder(mode, idx, holder) {
       if (values[i] === holder) btn.classList.add(`active-${s}`);
     }
   });
+  if (state.viewMode === 'wartable') renderWarTable();
 }
 
 // ============================
