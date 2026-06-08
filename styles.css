@@ -307,40 +307,41 @@ html, body {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  background: var(--color-card);
+  background: var(--color-text-inverse);
   border: var(--border-default);
-  border-radius: var(--radius-md);
-  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
   text-align: left;
   box-shadow: var(--shadow-sm);
 }
 .core-number-badge {
   flex-shrink: 0;
-  width: 56px;
-  height: 56px;
+  width: 40px;
+  height: 40px;
   border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--text-lg);
+  font-size: var(--text-sm);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
   line-height: 1;
+  background: var(--color-subheader);
 }
 .core-number-card:nth-child(1) .core-number-badge { background: #FBEFDB; }
 .core-number-card:nth-child(2) .core-number-badge { background: #E5E1F4; }
 .core-number-card:nth-child(3) .core-number-badge { background: #FBE0EC; }
 .core-number-title {
+  flex: 1;
   font-size: var(--text-md);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
-  line-height: 1.3;
 }
 .core-number-desc {
   font-size: var(--text-sm);
-  color: var(--color-text-secondary);
-  line-height: 1.3;
-  margin-top: 2px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  margin-top: 1px;
 }
 
 /* Collapsible phase cards */
