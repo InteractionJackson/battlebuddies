@@ -301,14 +301,14 @@ function renderBattle() {
 }
 
 function renderTurnTrack() {
-  let track = document.getElementById('turn-track');
-  if (!track) return;
+  let dots = document.getElementById('battle-progress-dots');
+  if (!dots) return;
   let html = '';
   for (let i = 1; i <= state.maxRounds; i++) {
     let cls = i < state.round ? 'done' : i === state.round ? 'current' : '';
     html += `<div class="turn-dot ${cls}"></div>`;
   }
-  track.querySelector('.turn-track-dots').innerHTML = html;
+  dots.innerHTML = html;
 }
 
 function renderOrderReminder() {
@@ -334,10 +334,6 @@ function renderShakenReminder() {
 
 function renderLOS() {
   return `
-    <div class="turn-track" id="turn-track">
-      <h3>Round Progress</h3>
-      <div class="turn-track-dots"></div>
-    </div>
     ${renderOrderReminder()}
     ${renderShakenReminder()}
     <div class="player-panels">
@@ -371,10 +367,6 @@ function renderHTL() {
       </div>`;
   });
   return `
-    <div class="turn-track" id="turn-track">
-      <h3>Round Progress</h3>
-      <div class="turn-track-dots"></div>
-    </div>
     ${renderOrderReminder()}
     ${renderShakenReminder()}
     <div class="player-panels">
@@ -409,10 +401,6 @@ function renderSiege() {
       </div>`;
   });
   return `
-    <div class="turn-track" id="turn-track">
-      <h3>Round Progress</h3>
-      <div class="turn-track-dots"></div>
-    </div>
     ${renderOrderReminder()}
     ${renderShakenReminder()}
     <div class="siege-roles">

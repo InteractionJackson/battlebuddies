@@ -211,26 +211,70 @@ html, body {
 }
 
 .rules-header {
-  background: var(--color-header);
-  padding: var(--space-8) var(--space-5) var(--space-6);
-  text-align: center;
-  position: relative;
+  background: var(--color-text-inverse);
+  border-bottom: var(--border-default);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
 }
+.rules-menu-btn {
+  width: 36px; height: 36px;
+  border-radius: var(--radius-md);
+  background: transparent;
+  border: none;
+  font-size: var(--text-lg);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+.rules-menu-btn:hover { background: var(--color-subheader); }
 .rules-header .app-logo {
-  font-size: var(--text-2xl);
-  margin-bottom: var(--space-2);
+  font-size: var(--text-xl);
+  flex: 1;
+  text-align: center;
 }
-.rules-header h1 {
+.rules-start-btn {
+  flex-shrink: 0;
+  font-size: var(--text-sm);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+}
+
+.rules-hero {
+  padding: var(--space-6) var(--space-4) var(--space-2);
+  max-width: 900px;
+  margin: 0 auto;
+}
+.rules-hero h1 {
   font-size: var(--text-2xl);
   font-weight: var(--font-weight-bold);
-  color: var(--color-text-inverse);
+  color: var(--color-text-primary);
   letter-spacing: -0.5px;
 }
-.rules-header p {
-  font-size: var(--text-sm);
-  color: rgba(255,255,255,0.65);
-  margin-top: var(--space-1);
+.rules-hero p {
+  font-size: var(--text-md);
+  color: var(--color-text-secondary);
+  margin-top: var(--space-2);
   font-weight: var(--font-weight-medium);
+}
+
+.section-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background: var(--color-banner-bg);
+  font-size: var(--text-sm);
+  margin-right: var(--space-2);
+  vertical-align: middle;
 }
 
 .rules-content {
@@ -375,12 +419,6 @@ html, body {
   color: var(--color-text-muted);
   font-size: var(--text-md);
   font-weight: var(--font-weight-semibold);
-}
-
-.rules-cta {
-  padding: 0 var(--space-4) var(--space-5);
-  max-width: 900px;
-  margin: 0 auto;
 }
 
 /* ===================== SCREEN 2 — GAME MODES ===================== */
@@ -912,22 +950,6 @@ html, body {
   transition: background 0.12s;
 }
 .battle-header-back:hover { background: rgba(255,255,255,0.1); }
-.battle-header-center {
-  flex: 1;
-  text-align: center;
-}
-.battle-mode-name {
-  font-size: var(--text-sm);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-inverse);
-  letter-spacing: 0.02em;
-}
-.battle-turn {
-  font-size: var(--text-xs);
-  color: rgba(255,255,255,0.55);
-  margin-top: 1px;
-  font-weight: var(--font-weight-medium);
-}
 .battle-rules-btn {
   background: transparent;
   border: 1px solid rgba(255,255,255,0.3);
@@ -980,6 +1002,33 @@ html, body {
   padding: var(--space-4);
   max-width: 900px;
   margin: 0 auto;
+}
+
+/* Battle subnav — mode name, round label, progress bar */
+.battle-subnav {
+  background: var(--color-subheader);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 900px;
+  margin: 0 auto;
+}
+.battle-subnav-text .battle-mode-name {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+.battle-subnav-text .battle-turn {
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-top: 2px;
+}
+@media (min-width: 600px) {
+  .battle-subnav { padding: var(--space-4) var(--space-8); }
 }
 
 /* Player panels */
@@ -1480,13 +1529,13 @@ body.wt-flip-modals .rulebook-overlay { transform: rotate(180deg); }
 /* ===================== TABLET / RESPONSIVE ===================== */
 @media (min-width: 600px) {
   .rules-content  { padding: var(--space-6) var(--space-8); }
-  .rules-cta      { padding: 0 var(--space-8) var(--space-6); }
+  .rules-hero     { padding: var(--space-6) var(--space-8) var(--space-2); }
   .modes-content  { padding: var(--space-6) var(--space-8); }
   .battle-content { padding: var(--space-5) var(--space-8); }
   .result-content { padding: var(--space-6) var(--space-8); }
 
-  .rules-header { padding: var(--space-8) var(--space-8) var(--space-8); }
-  .rules-header h1 { font-size: var(--text-3xl); }
+  .rules-header { padding: var(--space-3) var(--space-8); }
+  .rules-hero h1 { font-size: var(--text-3xl); }
 
   .core-number-card { padding: var(--space-5) var(--space-4); }
   .core-number-card .num { font-size: var(--text-2xl); }

@@ -15,13 +15,17 @@
   <!-- ==================== SCREEN 1: RULES ==================== -->
   <div id="screen-rules" class="screen active">
     <div class="rules-header">
+      <button class="rules-menu-btn" aria-label="Menu">☰</button>
       <div class="app-logo">⚔️</div>
+      <button class="btn btn-navy rules-start-btn" onclick="showScreen('modes')">Let's play</button>
+    </div>
+    <div class="rules-hero">
       <h1>Battle Buddies</h1>
       <p>Bolters, battles, and bedtimes. The hobby starts young.</p>
     </div>
 
     <div class="rules-content">
-      <p class="section-label">Core Numbers</p>
+      <p class="section-label"><span class="section-icon">🎲</span>Core Numbers</p>
       <div class="core-numbers">
         <div class="core-number-card">
           <div class="num">6"</div>
@@ -37,7 +41,7 @@
         </div>
       </div>
 
-      <p class="section-label">How a turn works</p>
+      <p class="section-label"><span class="section-icon">⏭️</span>How a turn works</p>
       <div class="phase-list" id="phase-list">
 
         <div class="phase-card" id="phase-command">
@@ -167,11 +171,6 @@
       </div>
     </div>
 
-    <div class="rules-cta">
-      <button class="btn btn-navy btn-block btn-lg" onclick="showScreen('modes')">
-        Let's play
-      </button>
-    </div>
   </div>
 
   <!-- ==================== SCREEN 2: MODES ==================== -->
@@ -249,16 +248,20 @@
     <div class="battle-header">
       <div class="battle-header-top">
         <button class="battle-header-back" onclick="attemptExitBattle()">←</button>
-        <div class="battle-header-center">
-          <div class="battle-mode-name" id="battle-mode-label">—</div>
-          <div class="battle-turn" id="battle-turn-label">Turn 1 of 5</div>
-        </div>
         <div style="display:flex;gap:6px;flex-shrink:0;align-items:center;">
           <button class="battle-wartable-btn" onclick="enterWarTable()" title="War Table">🗺️</button>
           <button class="battle-rules-btn" onclick="showRulebookModal()">📖 Rules</button>
           <button class="battle-next-btn" id="battle-next-btn" onclick="nextTurn()">Next Turn →</button>
         </div>
       </div>
+    </div>
+
+    <div class="battle-subnav">
+      <div class="battle-subnav-text">
+        <div class="battle-mode-name" id="battle-mode-label">—</div>
+        <div class="battle-turn" id="battle-turn-label">Turn 1 of 5</div>
+      </div>
+      <div class="turn-track-dots" id="battle-progress-dots"></div>
     </div>
 
     <div class="battle-content" id="battle-content">
@@ -319,7 +322,7 @@
     </div>
     <div class="rulebook-body">
 
-      <p class="section-label" style="margin-bottom:10px;">Core Numbers</p>
+      <p class="section-label" style="margin-bottom:10px;"><span class="section-icon">🎲</span>Core Numbers</p>
       <div class="core-numbers" style="margin-bottom:20px;">
         <div class="core-number-card">
           <div class="num">6"</div>
@@ -335,7 +338,7 @@
         </div>
       </div>
 
-      <p class="section-label" style="margin-bottom:10px;">The Four Phases</p>
+      <p class="section-label" style="margin-bottom:10px;"><span class="section-icon">⏭️</span>The Four Phases</p>
       <div class="phase-list" id="rb-phase-list">
 
         <div class="phase-card" id="rb-phase-move">
