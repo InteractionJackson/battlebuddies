@@ -15,33 +15,43 @@
   <!-- ==================== SCREEN 1: RULES ==================== -->
   <div id="screen-rules" class="screen active">
     <div class="rules-header">
-      <button class="rules-menu-btn" aria-label="Menu">☰</button>
+      <button class="rules-menu-btn" aria-label="Menu">⚔️</button>
       <div class="app-logo">⚔️</div>
-      <button class="btn btn-navy rules-start-btn" onclick="showScreen('modes')">Let's play</button>
+      <button class="btn btn-navy rules-start-btn" onclick="showScreen('modes')">Start game</button>
     </div>
     <div class="rules-hero">
-      <h1>Battle Buddies</h1>
-      <p>Bolters, battles, and bedtimes. The hobby starts young.</p>
+      <h1>This is Battle Buddies</h1>
+      <p>Bolters, battles and bedtimes.<br>The hobby starts young.</p>
+      <p>This is a homebrew ruleset aimed at simplicity to teach the basics. Getting a feel for the hobby.</p>
     </div>
 
     <div class="rules-content">
-      <p class="section-label"><span class="section-icon">🎲</span>Core Numbers</p>
+      <p class="section-label"><span class="section-icon">🎲</span>Core numbers</p>
       <div class="core-numbers">
         <div class="core-number-card">
-          <div class="num">6"</div>
-          <div class="label">Move Distance</div>
+          <div class="core-number-badge">6"</div>
+          <div>
+            <div class="core-number-title">Move distance</div>
+            <div class="core-number-desc">All models move the same distance</div>
+          </div>
         </div>
         <div class="core-number-card">
-          <div class="num">8"</div>
-          <div class="label">Shoot Range</div>
+          <div class="core-number-badge">8"</div>
+          <div>
+            <div class="core-number-title">Shooting range</div>
+            <div class="core-number-desc">All models have the same range</div>
+          </div>
         </div>
         <div class="core-number-card">
-          <div class="num">4+</div>
-          <div class="label">All Rolls</div>
+          <div class="core-number-badge">4+</div>
+          <div>
+            <div class="core-number-title">Success rolls</div>
+            <div class="core-number-desc">Keep it simple, 4 and over is good.</div>
+          </div>
         </div>
       </div>
 
-      <p class="section-label"><span class="section-icon">⏭️</span>How a turn works</p>
+      <p class="section-label"><span class="section-icon">⏭️</span>The phases of play</p>
       <div class="phase-list" id="phase-list">
 
         <div class="phase-card" id="phase-command">
