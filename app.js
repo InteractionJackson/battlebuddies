@@ -273,14 +273,14 @@ function startBattle() {
   state.objectives.forEach(o => o.holder = 'contested');
   state.siegeObjectives.forEach(o => o.holder = 'contested');
 
+  document.getElementById('battle-mode-icon').textContent = MODE_META[mode].emoji;
   document.getElementById('battle-mode-label').textContent = MODE_META[mode].label;
   showCommandPhase();
 }
 
 function updateTurnLabel() {
   const p = state.players[state.activePlayer];
-  document.getElementById('battle-turn-label').textContent =
-    `Round ${state.round} of ${state.maxRounds} — ${p.name}'s Turn`;
+  document.getElementById('battle-turn-label').textContent = `Round ${state.round}`;
   const isLast = state.round >= state.maxRounds && state.activePlayer === 1;
   document.getElementById('battle-next-btn').textContent = isLast ? 'End Game →' : 'Next Turn →';
 }
