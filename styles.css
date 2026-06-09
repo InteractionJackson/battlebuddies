@@ -1061,41 +1061,34 @@ html, body {
   margin-bottom: var(--space-4);
 }
 .player-panel {
-  background: var(--color-card);
+  background: #DBDBE0;
   border-radius: var(--radius-lg);
-  border: 2px solid transparent;
   overflow: hidden;
 }
 .player-panel.active-turn {
-  background: var(--color-text-inverse);
-  border: var(--border-active);
+  background: #EFEFF1;
+  box-shadow: var(--shadow-sm);
 }
-.player-panel:not(.active-turn) {
-  background: var(--color-card);
-}
-.player-panel:not(.active-turn) .player-name-display,
-.player-panel:not(.active-turn) .score-value,
-.player-panel:not(.active-turn) .score-label {
-  color: var(--color-text-muted);
-}
-.player-panel-header {
-  padding: var(--space-3) var(--space-3) var(--space-2);
-}
-.player-name-wrap {
+.tile-row-1 {
   display: flex;
-  align-items: center;
-  gap: var(--space-1);
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-3) var(--space-2);
+  gap: var(--space-2);
 }
-.player-name-display {
-  font-size: var(--text-sm);
-  font-weight: var(--font-weight-bold);
+.tile-name-wrap {
   flex: 1;
-  cursor: pointer;
-  border-radius: 4px;
-  padding: 1px 3px;
-  margin: -1px -3px;
+  min-width: 0;
+}
+.tile-player-name {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
+  cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .player-name-input {
   font-size: var(--text-sm);
@@ -1110,37 +1103,84 @@ html, body {
   display: none;
   outline: none;
 }
-.edit-icon {
-  font-size: var(--text-xs);
-  opacity: 0.4;
-  cursor: pointer;
-}
-
-.player-score-area {
-  padding: var(--space-3) var(--space-3) var(--space-3);
-  text-align: center;
-}
-.score-label {
-  font-size: var(--text-xs);
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-  margin-bottom: var(--space-1);
-}
-.score-value {
-  font-size: var(--text-3xl);
-  font-weight: var(--font-weight-bold);
-  line-height: 1;
-  margin-bottom: var(--space-3);
-  color: var(--color-text-primary);
-}
-
-.kill-controls {
+.tile-shocked-pill {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  background: #FEF3C7;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: var(--text-sm);
+}
+.tile-row-2 {
+  display: flex;
+  flex-direction: column;
   gap: var(--space-2);
+  padding: 0 var(--space-3) var(--space-3);
+}
+.tile-order-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px var(--space-2);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  background: var(--color-text-inverse);
+  color: var(--color-text-primary);
+  border: var(--border-default);
+  white-space: nowrap;
+  align-self: flex-start;
+}
+.tile-order-pill--dim {
+  opacity: 0.45;
+}
+.tile-kill-counter {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+.tile-kill-number {
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+  color: var(--color-text-primary);
+}
+.tile-kill-label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+}
+.tile-controls {
+  display: flex;
+  gap: var(--space-2);
+  padding: 0 var(--space-3) var(--space-3);
+}
+.tile-btn {
+  flex: 1;
+  height: 44px;
+  border-radius: var(--radius-md);
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-bold);
+  font-family: inherit;
+  border: var(--border-default);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.tile-btn-minus {
+  background: var(--color-text-inverse);
+  color: var(--color-text-primary);
+}
+.tile-btn-plus {
+  background: var(--color-header);
+  color: var(--color-text-inverse);
+  border-color: var(--color-header);
 }
 
 /* Objectives section */

@@ -429,41 +429,43 @@ function renderPlayerPanel(idx, statKey, statLabel) {
   const val = p[statKey];
   const isActive = state.activePlayer === idx;
 
-  let controls = '';
-  if (statKey === 'kills') {
-    controls = `
-      <div class="kill-controls">
-        <button class="btn btn-icon btn-icon-danger" onclick="adjustKills(${idx}, -1)">−</button>
-        <div class="score-value">${val}</div>
-        <button class="btn btn-icon btn-icon-primary" onclick="adjustKills(${idx}, 1)">+</button>
-      </div>`;
-  } else {
-    controls = `<div class="score-value">${val}</div>`;
-  }
+  // Row 1: name + battle shocked indicator
+  const shakenBadge = p.shaken ? `<div class="tile-shocked-pill">⚡️</div>` : '';
 
-  let orderBadge = '';
-  if (isActive && p.shaken) {
-    orderBadge += `<div class="order-badge shaken-badge">⚠️ Shaken — Move 3"</div>`;
-  }
-  if (isActive && p.activeOrder) {
+  // Row 2: order pill (top) + kill counter (below)
+  let orderPill = '';
+  if (p.activeOrder) {
     const o = ORDERS[p.activeOrder];
-    orderBadge += `<div class="order-badge">${o.icon} ${o.name}</div>`;
+    orderPill = `<div class="tile-order-pill${isActive ? '' : ' tile-order-pill--dim'}">${o.icon} ${o.name}</div>`;
   }
+  const counterLabel = statLabel.replace(/^[^\w]+/, '').toLowerCase();
+  const killCounter = `
+    <div class="tile-kill-counter">
+      <div class="tile-kill-number" id="tile-score-${idx}">${val}</div>
+      <div class="tile-kill-label">${counterLabel}</div>
+    </div>`;
+
+  // Row 3: +/− buttons (active tile only)
+  const controls = isActive ? `
+    <div class="tile-controls">
+      <button class="tile-btn tile-btn-minus" onclick="adjustKills(${idx}, -1)">−</button>
+      <button class="tile-btn tile-btn-plus" onclick="adjustKills(${idx}, 1)">+</button>
+    </div>` : '';
 
   return `
     <div class="player-panel ${cls}${isActive ? ' active-turn' : ''}">
-      <div class="player-panel-header">
-        <div class="player-name-wrap">
-          <div class="player-name-display" id="pname-display-${idx}" onclick="startEditName(${idx})" title="Tap to edit">${escHtml(p.name)}</div>
+      <div class="tile-row-1">
+        <div class="tile-name-wrap">
+          <div class="tile-player-name" id="pname-display-${idx}" onclick="startEditName(${idx})" title="Tap to edit">${escHtml(p.name)}</div>
           <input class="player-name-input" id="pname-input-${idx}" value="${escHtml(p.name)}" onblur="finishEditName(${idx})" onkeydown="nameKeydown(event, ${idx})">
-          <span class="edit-icon" onclick="startEditName(${idx})">✏️</span>
         </div>
-        ${orderBadge}
+        ${shakenBadge}
       </div>
-      <div class="player-score-area">
-        <div class="score-label">${statLabel}</div>
-        ${controls}
+      <div class="tile-row-2">
+        ${orderPill}
+        ${killCounter}
       </div>
+      ${controls}
     </div>`;
 }
 
@@ -728,7 +730,7 @@ function buildHTLObjectiveHTML() {
 // ============================
 function adjustKills(idx, delta) {
   state.players[idx].kills = Math.max(0, state.players[idx].kills + delta);
-  const scoreEl = document.querySelector(`.player-panel.${idx === 0 ? 'p1' : 'p2'} .score-value`);
+  const scoreEl = document.getElementById(`tile-score-${idx}`);
   if (scoreEl) scoreEl.textContent = state.players[idx].kills;
   if (state.viewMode === 'wartable') renderWarTable();
 }
