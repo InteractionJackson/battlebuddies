@@ -445,8 +445,8 @@ function renderPlayerPanel(idx, statKey, statLabel) {
       <div class="tile-kill-label">${counterLabel}</div>
     </div>`;
 
-  // Row 3: +/− buttons (active tile only)
-  const controls = isActive ? `
+  // Row 3: +/− buttons (LOS only — HTL scores automatically from objectives)
+  const controls = isActive && state.mode === 'los' ? `
     <div class="tile-controls">
       <button class="tile-btn tile-btn-minus" onclick="adjustKills(${idx}, -1)">−</button>
       <button class="tile-btn tile-btn-plus" onclick="adjustKills(${idx}, 1)">+</button>
