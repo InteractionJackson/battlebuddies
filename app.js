@@ -783,6 +783,7 @@ function nextTurn() {
   // Advance: P1 → P2, or P2 → next round P1
   if (state.activePlayer === 0) {
     state.activePlayer = 1;
+    renderBattle();
     showBattleshockCheck();
   } else {
     if (state.round >= state.maxRounds) {
@@ -791,6 +792,7 @@ function nextTurn() {
     }
     state.round++;
     state.activePlayer = 0;
+    renderBattle();
     showBattleshockCheck();
   }
 }
